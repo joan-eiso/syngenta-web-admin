@@ -1,12 +1,9 @@
-import { useState } from "react";
 import { Formik, Form as FormikForm, Field } from "formik";
 import { createUseStyles, useTheme } from "react-jss";
 
 import TextInput from "../../atoms/TextInput/TextInput";
 
 function EditForm({ user: { id, isActive, name, identification, address, phone, email }}) {
-  const [isEditing, setIsEditing] = useState(false);
-
   const theme = useTheme();
   const classes = useStyles({ theme });
   return (
