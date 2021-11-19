@@ -1,0 +1,2 @@
+export const authEndpoint = 'https://wdr3k4mgn6.execute-api.us-west-2.amazonaws.com/stage_syngenta_test/unregistred-user';
+export const sessionEndpoint = 'https://emqrlczaka.execute-api.us-west-2.amazonaws.com/stage_syngenta_test/logged';
