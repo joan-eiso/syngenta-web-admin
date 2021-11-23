@@ -1,14 +1,35 @@
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Formik, Form as FormikForm, Field } from "formik";
 import { createUseStyles, useTheme } from "react-jss";
-import { Link } from "react-router-dom";
+
+import { useDispatch } from "react-redux";
+import { login, resetPwdRecoveryStatus } from "../../../../../redux/authentication/duck";
 
 import Button from "../../../../atoms/Button/Button";
 import TextInput from "../../../../atoms/TextInput/TextInput";
 
-function LoginForm({ setSession }) {
-  const handleLogin = () => {
-    setSession(true);
+import { checkEmptyValueOnPayload, checkValidEmail } from "../../../../../utils/dataValidation";
+
+function LoginForm() {
+  const dispatch = useDispatch();
+
+  const handleLogin = (values) => {
+    let { email, password } = values;
+    if(checkEmptyValueOnPayload(values)) {
+      alert("Ingresa tus credenciales");
+      return;
+    } 
+    else if(!checkValidEmail(email)) {
+      alert("Ingresa un email valido");
+      return;
+    }
+    dispatch(login(email, password));
   }
+
+  useEffect(() => {
+    dispatch(resetPwdRecoveryStatus());
+  }, [dispatch]);
 
   const theme = useTheme();
   const classes = useStyles({ theme });

@@ -7,7 +7,7 @@ export function requestProducers(encodedPayload) {
     // url: sessionEndpoint,
     url: `https://cors-anywhere.herokuapp.com/${sessionEndpoint}`,
     data: {
-      method: "dist_get_all_prod",
+      method: "get_all_productores",
       data: encodedPayload,
     }
   });

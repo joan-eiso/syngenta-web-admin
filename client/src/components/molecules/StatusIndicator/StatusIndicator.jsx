@@ -21,7 +21,6 @@ export default StatusIndicator;
 const useStyles = createUseStyles({
   root: {
     display: "flex",
-    width: "100%",
     borderRadius: 4,
     overflow: "hidden"
   },
@@ -31,7 +30,7 @@ const useStyles = createUseStyles({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    padding: 2,
+    padding: "5px 20px",
     backgroundColor: theme.colors.gray.lightest
   }),
   

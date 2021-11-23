@@ -1,11 +1,31 @@
 import { createUseStyles, useTheme } from "react-jss";
 
+import { useSelector } from "react-redux";
+
 import { FaUserCircle } from "react-icons/fa";
 import Button from "../../../atoms/Button/Button";
 import StatusIndicator from "../../StatusIndicator/StatusIndicator";
 
+function DistributorCard({ id, onEdit }) {
+  const users = useSelector(state => state.user.users);
+  const { name, identification, email, password, temp, status, company, groupId, rank } = users.find(user => user.id === id);
 
-function DistributorCard({ id, name, isActive }) {
+  const handleEdit = () => {
+    let distributorData = {
+      id,
+      name,
+      identification,
+      email,
+      password,
+      temp,
+      status,
+      company,
+      groupId,
+      rank,
+    }
+    onEdit(distributorData);
+  }
+
   const theme = useTheme();
   const classes = useStyles({ theme });
   return (
@@ -13,8 +33,8 @@ function DistributorCard({ id, name, isActive }) {
       <FaUserCircle size={56} color={theme.colors.gray.base} />
       <p className={classes.name}>{name}</p>
       <div className={classes.bottomContainer}>
-        <StatusIndicator className={classes.statusIndicator} isActive={isActive} />
-        <Button className={classes.button} label="Ver" onClick={null} />
+        <StatusIndicator className={classes.statusIndicator} isActive={status} />
+        <Button className={classes.button} label="Editar" onClick={handleEdit} />
       </div>
     </div>
   )
@@ -50,6 +70,7 @@ const useStyles = createUseStyles({
   },
   
   statusIndicator: {
+    width: "100%",
     marginBottom: 10,
   },
   

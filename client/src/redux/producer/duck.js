@@ -4,12 +4,23 @@ export const FETCH_PRODUCERS_FAILURE = "/producer/FETCH_PRODUCERS/FAILURE";
 
 const initialState = {
   producers: [],
+  fetchError: undefined
 }
 
-export const fetchProducers = (distAuth, token) => ({
+export const fetchProducers = (token, distAuth) => ({
   type: FETCH_PRODUCERS_REQUESTED,
-  distAuth,
-  token
+  token,
+  distAuth
+});
+
+export const onFetchProducersSuccess = (producers) => ({
+  type: FETCH_PRODUCERS_SUCCESS,
+  producers
+});
+
+export const onFetchProducersFailure = (error) => ({
+  type: FETCH_PRODUCERS_FAILURE,
+  error
 });
 
 const reducer = (state = initialState, action) => {
@@ -19,6 +30,12 @@ const reducer = (state = initialState, action) => {
       let producers = action.producers;
       return {
         ...state, producers
+      }
+
+    case FETCH_PRODUCERS_FAILURE:
+      let error = action.error;
+      return {
+        ...state, fetchError: error
       }
 
     default:

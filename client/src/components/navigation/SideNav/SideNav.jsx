@@ -1,5 +1,5 @@
 import { createUseStyles, useTheme } from "react-jss";
-import { FaUserCircle, FaChartPie, FaUserAlt, FaUsers, FaHouseUser, FaIdBadge, FaLeaf, FaCalendar, FaCog } from "react-icons/fa";
+import { FaUserCircle, FaChartPie, FaUserAlt, FaUsers, FaHouseUser, FaIdBadge, FaLeaf, FaCalendar } from "react-icons/fa";
 
 import Tab from "./Tab";
 
@@ -24,10 +24,11 @@ function SideNav() {
         <Tab to="/licencias" Icon={FaIdBadge} label="Licencias" />
         <Tab to="/distribuidores" Icon={FaUserAlt} label="Distribuidores" />
         <Tab to="/productos" Icon={FaLeaf} label="Producto" />
-        <Tab to="/usuarios" Icon={FaCalendar} label="Usuarios" />
+        <Tab to="/administradores" Icon={FaCalendar} label="Administradores" />
       </div>
       <div className={classes.bottomContainer}>
-        <Tab to="/ajustes" Icon={FaCog} label="Ajustes" />
+        {/* <Tab to="/ajustes" Icon={FaCog} label="Ajustes" /> */}
+        {/* <div className={classes.logoutButton}></div> */}
       </div>
     </div>
   );
@@ -90,5 +91,9 @@ const useStyles = createUseStyles({
     display: "flex",
     alignItems: "flex-end",
     paddingBottom: 20
+  },
+
+  logoutButton: {
+    
   }
 });

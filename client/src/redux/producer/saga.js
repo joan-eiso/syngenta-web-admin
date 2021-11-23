@@ -2,31 +2,34 @@ import { take, call, put, all } from "redux-saga/effects";
 import { encodePayload } from '../../utils/jwt.util';
 import { requestProducers } from "./request";
 
+import { FETCH_PRODUCERS_REQUESTED, onFetchProducersSuccess, onFetchProducersFailure } from './duck';
+
 export function* fetchProducers() {
   while(true) {
     try {
-      yield take("/producer/FETCH_PRODUCERS/REQUESTED");
+      const { token, distAuth } = yield take(FETCH_PRODUCERS_REQUESTED);
 
       let payload = {
-        dist_auth: "joansebastian35@gmail.com"
+        dist_auth: distAuth
       }
-      let encodedPayload = encodePayload(payload, "357b59296e205e34bbd8ea9655a9e3e3");
+      let encodedPayload = encodePayload(payload, token);
       let { data: { productores } } = yield call(requestProducers, encodedPayload);
       
       let producers = productores.map((productor) => ({
-          id: productor.IDProductor,
-          identification: productor.identificacionProductor,
-          name: productor.nombreProductor,
-          address: productor.direccionProductor,
-          phone: productor.telefonoProductor,
-          email: productor.emailProductor,
-          creationDate: productor.fechaRegistro,
-          propertyQuantity: productor.numeroPredios ?? 0,
-          isClient: false,
+        id: productor.IDProductor,
+        hash: productor.hashProductor,
+        identification: productor.identificacionProductor,
+        name: productor.nombreProductor,
+        address: productor.direccionProductor,
+        phone: productor.telefonoProductor,
+        email: productor.emailProductor,
+        creationDate: productor.fechaRegistro,
+        propertyQuantity: productor.numeroPredios ?? 0,
+        isClient: false,
       }));
-      yield put({ type: "/producer/FETCH_PRODUCERS/SUCCESS", producers });
+      yield put(onFetchProducersSuccess(producers));
     } catch (error) {
-      yield put({ type: "/producer/FETCH_PRODUCERS/FAILURE", error });
+      yield put(onFetchProducersFailure(error));
     }
   }
 }

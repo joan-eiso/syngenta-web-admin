@@ -1,2 +1,2 @@
-export const authEndpoint = 'https://wdr3k4mgn6.execute-api.us-west-2.amazonaws.com/stage_syngenta_test/unregistred-user';
-export const sessionEndpoint = 'https://emqrlczaka.execute-api.us-west-2.amazonaws.com/stage_syngenta_test/logged';
+export const authEndpoint = "https://6vc5bahvj9.execute-api.us-east-2.amazonaws.com/stage_syngenta_pdn/unregistred-user";
+export const sessionEndpoint = "https://xtdb9nxmja.execute-api.us-east-2.amazonaws.com/stage_syngenta_pdn_logged/syngenta-logged-pdn";

@@ -1,22 +1,53 @@
+import { useEffect } from "react";
 import { createUseStyles, useTheme } from "react-jss";
 import { useHistory } from 'react-router-dom';
 import { Formik, Form as FormikForm, Field } from "formik";
 import { BsArrowLeftShort } from "react-icons/bs";
 
+import { useDispatch, useSelector } from "react-redux";
+import {  restorePwd } from "../../../../../redux/authentication/duck";
+
 import Button from "../../../../atoms/Button/Button";
 import TextInput from "../../../../atoms/TextInput/TextInput";
 
 function Step3({ setStep }) {
+  const dispatch = useDispatch();
+  const pwdRecoverySucceed = useSelector(state => state.auth.pwdRecoverySucceed);
+  const pwdRecoveryError = useSelector(state => state.auth.pwdRecoveryError);
+
   const history = useHistory();
 
   const handleGoBack = () => {
-    setStep(2);
+    history.goBack();
   }
   
-  const handleChangePassword = () => {
-    setStep(undefined);
-    history.push("/");
+  const handleChangePassword = ({ newPassword, repeatedPassword }) => {
+    if(newPassword.length <= 0 || repeatedPassword.length <= 0) {
+      alert("Ingresa todos los datos");
+      return;
+    } 
+    else if(newPassword !== repeatedPassword) {
+      alert("Las contraseñas no coinciden");
+      return;
+    }
+    dispatch(restorePwd(newPassword));
   }
+  
+  useEffect(() => {
+    if(pwdRecoverySucceed) {
+      alert("La contraseña fue restablecida exitosamente");
+      setStep(undefined);
+      history.push("/");
+    } 
+  }, [pwdRecoverySucceed, setStep, history]);
+  
+  useEffect(() => {
+    if(pwdRecoveryError) {
+      alert("La contraseña no pudo restablecerse");
+      setStep(undefined);
+      history.push("/");
+    } 
+  }, [pwdRecoveryError, setStep, history]);
 
   const theme = useTheme();
   const classes = useStyles({ theme });

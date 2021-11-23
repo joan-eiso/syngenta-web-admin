@@ -1,10 +1,16 @@
-import { createUseStyles } from "react-jss";
+import { createUseStyles, useTheme } from "react-jss";
 import cn from "classnames";
 
-function Button({ className, type, label, onClick }) {
-  const classes = useStyles();
+function Button({ className, type, label, isEnable = true, onClick }) {
+  const theme = useTheme();
+  const classes = useStyles({ theme, isEnable });
+
+  const handleClick = () => {
+    if(isEnable && onClick) onClick();
+  }
+
   return (
-    <button className={cn(classes.root, className)} type={type} onClick={onClick}>{label}</button>
+    <button className={cn(classes.root, className)} type={type} onClick={handleClick}>{label}</button>
   )
 }
 
@@ -20,8 +26,8 @@ const useStyles = createUseStyles({
     outline: "none",
     border: "none",
     borderRadius: 4,
-    backgroundColor: "#002d72",
-    color: "white",
-    cursor: "pointer"
+    backgroundColor: ({ theme, isEnable }) => isEnable ? "#002d72" : theme.colors.gray.light,
+    color: ({ theme, isEnable }) => isEnable ? "white" : theme.colors.bodyText.light,
+    cursor: ({ isEnable }) => isEnable ? "pointer" : "default"
   }
 });

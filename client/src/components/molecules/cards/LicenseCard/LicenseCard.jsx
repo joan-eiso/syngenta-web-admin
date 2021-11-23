@@ -2,16 +2,16 @@ import { createUseStyles, useTheme } from "react-jss";
 
 import Button from "../../../atoms/Button/Button";
 
-function LicenseCard({ id, propertyName, department, city }) {
+function LicenseCard({ id, propertyId, date }) {
   const theme = useTheme();
   const classes = useStyles({ theme });
   return (
     <div className={classes.root}>
       <p className={classes.licenseNumber}>Licencia #{id}</p>
       <div className={classes.divider}></div>
-      <p>{propertyName}</p>
+      <p>{propertyId}</p>
       <div className={classes.bottomRightContainer}>
-        <p className={classes.location}>{`${department} - ${city}`}</p>
+        <p className={classes.location}>Fecha: {date}</p>
         <Button className={classes.button} label="Ver" onClick={null} />
       </div>
     </div>

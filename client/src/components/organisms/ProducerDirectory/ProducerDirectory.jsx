@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { createUseStyles, useTheme } from "react-jss";
-import { useDispatch, useSelector } from "react-redux";
 
+import { useDispatch, useSelector } from "react-redux";
 import { fetchProducers } from "../../../redux/producer/duck";
 
 import FilterButton from "../../atoms/FilterButton/FilterButton";
@@ -10,11 +10,13 @@ import SearchBar from "../../molecules/SearchBar/SearchBar";
 
 function ProducerDirectory() {
   const dispatch = useDispatch();
+  const token = useSelector(state => state.auth.token);
+  const distAuth = useSelector(state => state.auth.distAuth);
   const producers = useSelector(state => state.producer.producers);
 
   useEffect(() => {
-    dispatch(fetchProducers());
-  }, [dispatch]);
+    dispatch(fetchProducers(token, distAuth));
+  }, [dispatch, token, distAuth]);
   
   const theme = useTheme();
   const classes = useStyles({ theme });

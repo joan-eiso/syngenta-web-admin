@@ -1,39 +1,50 @@
-import { createUseStyles, useTheme } from "react-jss";
+import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
-import Button from "../../atoms/Button/Button";
+import { AnimatePresence } from "framer-motion";
+import { createUseStyles, useTheme } from "react-jss";
 
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUsers } from "../../../redux/user/duck";
+
+import EditForm from "./EditForm";
+import Button from "../../atoms/Button/Button";
 import FilterButton from "../../atoms/FilterButton/FilterButton";
 import DistributorCard from "../../molecules/cards/DistributorCard/DistributorCard";
 import SearchBar from "../../molecules/SearchBar/SearchBar";
+import Modal from "../Modal/Modal";
 
 function DistributorDirectory() {
-  const producers = [
-    {
-      id: 1,
-      name: "Maria Cristina Monsalve",
-      isActive: false,
-    },
-    {
-      id: 2,
-      name: "Ricardo Acevedo",
-      isActive: true,
-    },
-    {
-      id: 3,
-      name: "Julian Lopez Rodríguez",
-      isActive: true,
-    },
-    {
-      id: 4,
-      name: "Maria del Pilar Zambrano",
-      isActive: false,
-    },
-    {
-      id: 5,
-      name: "Guillermo Molano",
-      isActive: true,
-    },
-  ];
+  const dispatch = useDispatch();
+  const token = useSelector(state => state.auth.token);
+  const distAuth = useSelector(state => state.auth.distAuth);
+  const distributors = useSelector(state => state.user.distributors);
+
+  useEffect(() => {
+    dispatch(fetchUsers(token, distAuth));
+  }, [dispatch, token, distAuth]);
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedDist, setSelectedDist] = useState(undefined);
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  }
+
+  const handleEditDistributor = (distributor) => {
+    setModalIsOpen(true);
+    setSelectedDist({
+      id: distributor.id, 
+      name: distributor.name,
+      identification: distributor.identification,
+      email: distributor.email,
+      password: distributor.password,
+      temp: distributor.temp,
+      status: distributor.status,
+      company: distributor.company,
+      groupId: distributor.groupId,
+      rank: distributor.rank,
+    });
+  }
 
   const history = useHistory();
 
@@ -45,6 +56,16 @@ function DistributorDirectory() {
   const classes = useStyles({ theme });
   return (
     <div className={classes.root}>
+      <AnimatePresence
+        initial="none"
+        exitBeforeEnter={true}
+        >
+        {modalIsOpen && 
+          <Modal handleClose={closeModal}>
+            <EditForm distributor={selectedDist} handleClose={closeModal} />
+          </Modal>
+        }
+      </AnimatePresence>
       <header className={classes.header}>
         <h1 className={classes.title}>Distribuidores</h1>
         <div className={classes.actions}>
@@ -54,12 +75,11 @@ function DistributorDirectory() {
         </div>
       </header>
       <div className={classes.distributorList}>
-        {producers.map(producer => (
+        {distributors.map(distributor => (
           <DistributorCard 
-            key={producer.id}  
-            id={producer.id}  
-            name={producer.name}
-            isActive={producer.isActive}
+            key={distributor.id}  
+            id={distributor.id}  
+            onEdit={handleEditDistributor}
           />
         ))}
       </div>

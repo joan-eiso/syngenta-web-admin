@@ -1,10 +1,10 @@
-import { useState } from "react";
 import { createUseStyles, useTheme } from "react-jss";
 import { Redirect, Route, Switch } from "react-router";
 
+import { useSelector } from "react-redux";
+
 import TopBar from "./components/molecules/TopBar/TopBar";
 import SideNav from "./components/navigation/SideNav/SideNav";
-import UserDirectory from "./components/organisms/UserDirectory/UserDirectory";
 import DistributorDirectory from "./components/organisms/DistributorDirectory/DistributorDirectory";
 import LicenseDirectory from "./components/organisms/LicenseDirectory/LicenseDirectory";
 import ProducerDirectory from "./components/organisms/ProducerDirectory/ProducerDirectory";
@@ -13,15 +13,17 @@ import Dashboard from "./components/organisms/Dashboard/Dashboard";
 import AddDistributor from "./components/organisms/AddDistributor/AddDistributor";
 import Authentication from "./components/organisms/Authentication/Authentication";
 import PropertyDirectory from "./components/organisms/PropertyDirectory/PropertyDirectory";
+import AdminDirectory from "./components/organisms/AdminDirectory/AdminDirectory";
+import AddAdmin from "./components/organisms/AddAdmin/AddAdmin";
 
 function App() {
-  const [session, setSession] = useState(false);
+  const token = useSelector(state => state.auth.token);
 
   const theme = useTheme();
   const classes = useStyles({ theme });
   return (
     <div className={classes.root}>
-      { session 
+      { token 
       ? 
       <>
         <div className={classes.sideNav}>
@@ -52,8 +54,11 @@ function App() {
             <Route path="/productos">
               <ProductDirectory />
             </Route>
-            <Route path="/usuarios">
-              <UserDirectory />
+            <Route path="/administradores/añadir">
+              <AddAdmin />
+            </Route>
+            <Route path="/administradores">
+              <AdminDirectory />
             </Route>
             <Route path="/ajustes">
               <p>Ajustes</p>
@@ -69,7 +74,7 @@ function App() {
         <div className={classes.authWrapper}>  
           <Switch>
             <Route path="/">
-              <Authentication setSession={setSession} />
+              <Authentication />
             </Route>
           </Switch>
       </div>

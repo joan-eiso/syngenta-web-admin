@@ -1,24 +1,22 @@
+import { useEffect } from "react";
 import { createUseStyles, useTheme } from "react-jss";
+
+import { useDispatch, useSelector } from "react-redux";
+import { fetchLicenses } from "../../../redux/license/duck";
 
 import FilterButton from "../../atoms/FilterButton/FilterButton";
 import LicenseCard from "../../molecules/cards/LicenseCard/LicenseCard";
 import SearchBar from "../../molecules/SearchBar/SearchBar";
 
 function LicenseDirectory() {
-  const licenses = [
-    {
-      id: 1,
-      propertyName: "Hacienda El Cóndor Andino",
-      department: "Caldas",
-      city: "Manizales",
-    },
-    {
-      id: 2,
-      propertyName: "Hacienda El Molino",
-      department: "Valle del Cauca",
-      city: "Potrerito",
-    }
-  ];
+  const dispatch = useDispatch();
+  const token = useSelector(state => state.auth.token);
+  const distAuth = useSelector(state => state.auth.distAuth);
+  const licenses = useSelector(state => state.license.licenses);
+
+  useEffect(() => {
+    dispatch(fetchLicenses(token, distAuth));
+  }, [dispatch, token, distAuth]);
   
   const theme = useTheme();
   const classes = useStyles({ theme });
@@ -36,9 +34,8 @@ function LicenseDirectory() {
           <LicenseCard 
             key={license.id}
             id={license.id}  
-            propertyName={license.propertyName}
-            department={license.department}
-            city={license.city}
+            propertyId={license.propertyId}
+            date={license.date}
           />
         ))}
       </div>

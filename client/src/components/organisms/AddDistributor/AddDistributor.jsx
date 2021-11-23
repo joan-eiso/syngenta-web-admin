@@ -3,8 +3,8 @@ import { Switch, Route, Link, useHistory } from "react-router-dom";
 import { FiChevronRight, FiChevronLeft } from "react-icons/fi";
 import cn from "classnames";
 
-import Dropzone from '../../molecules/Dropzone/Dropzone';
-import NewDistForm from "./NewDistForm";
+// import Dropzone from '../../molecules/Dropzone/Dropzone';
+import NewDistForm from "./CreateDistForm";
 
 function AddDistributor() {  
   const history = useHistory();
@@ -38,13 +38,13 @@ function AddDistributor() {
                 <Link className={cn(classes.link, match && classes.activeLink)} to="/distribuidores/añadir">Crear distribuidor</Link>
               )}
             />
-            <Route 
+            {/* <Route 
               exact
               path="/distribuidores/añadir/cargar-archivo"
               children={({ match }) => (
                 <Link className={cn(classes.link, match && classes.activeLink)} to="/distribuidores/añadir/cargar-archivo">Cargar archivo</Link>
               )}
-            />
+            /> */}
           </div>
           <Switch>
             <Route exact path="/distribuidores/añadir">
@@ -52,11 +52,11 @@ function AddDistributor() {
                 <NewDistForm />
               </div>
             </Route>
-            <Route exact path="/distribuidores/añadir/cargar-archivo">
+            {/* <Route exact path="/distribuidores/añadir/cargar-archivo">
               <div className={classes.dropzoneContainer}>
                 <Dropzone />
               </div>
-            </Route>
+            </Route> */}
           </Switch>
         </section>
       </div>

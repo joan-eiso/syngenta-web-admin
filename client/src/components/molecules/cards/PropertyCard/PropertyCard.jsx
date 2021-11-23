@@ -2,7 +2,11 @@ import { createUseStyles, useTheme } from "react-jss";
 
 import Button from "../../../atoms/Button/Button";
 
-function PropertyCard({ id, name, department, city, hectares }) {
+function PropertyCard({ id, name, country, department, city, subregion, hectares, onClick }) {
+  const handleClick = () => {
+    onClick(id, name, country, department, city, subregion, hectares);
+  }
+
   const theme = useTheme();
   const classes = useStyles({ theme });
   return (
@@ -12,7 +16,7 @@ function PropertyCard({ id, name, department, city, hectares }) {
       <p>{department} - {city}</p>
       <div className={classes.bottomRightContainer}>
         <p className={classes.hectares}>{`${hectares} hectarea${hectares === 1 ? "" : "s"}`}</p>
-        <Button className={classes.button} label="Ver" onClick={null} />
+        <Button className={classes.button} label="Ver" onClick={handleClick} />
       </div>
     </div>
   )

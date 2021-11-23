@@ -2,13 +2,22 @@ import { useEffect, useState } from "react";
 import { Route, Switch, useLocation } from "react-router-dom";
 import { createUseStyles, useTheme } from "react-jss";
 
+import { useDispatch } from "react-redux";
+import { resetPwdRecoveryStatus } from "../../../redux/authentication/duck";
+
 import LoginForm from "./forms/Login/LoginForm";
 import RecoverPwdForm from "./forms/RecoverPwd/RecoverPwdForm";
 
-function Authentication({ setSession }) {
+function Authentication() {
+  const dispatch = useDispatch();
+
   const [onRecoveryPwd, setOnRecoveryPwd] = useState(false);
   const [pwdRecoveryStep, setPwdRecoveryStep] = useState(undefined);
   const location = useLocation();
+
+  useEffect(() => {
+    dispatch(resetPwdRecoveryStatus());
+  }, [dispatch]);
 
   useEffect(() => {
     if(location.pathname === "/recuperar-contraseña") {
@@ -44,7 +53,7 @@ function Authentication({ setSession }) {
               <RecoverPwdForm step={pwdRecoveryStep} setStep={setPwdRecoveryStep} />
             </Route>}
             <Route path="/">
-              <LoginForm setSession={setSession} />
+              <LoginForm />
             </Route>
           </Switch>
         </div>

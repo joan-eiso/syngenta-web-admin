@@ -14,7 +14,7 @@ function ProductCategoryCard({ categoryName, Icon, data, isEnable }) {
       </div>
       <div className={classes.content}>
         <p className={classes.itemCount}>5 items</p>
-        {isEnable && <Button label="Agregar" />} 
+        {isEnable && <Button label="Agregar" isEnable={false} />} 
       </div>
     </div>
   )
