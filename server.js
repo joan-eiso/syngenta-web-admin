@@ -4,7 +4,7 @@ const cors = require("cors");
 const morgan = require("morgan");
 
 const app = express();
-const PORT = 8000;
+const PORT = 80;
 const path = require("path");
 
 const API_AUTH_ENDPOINT = "https://6vc5bahvj9.execute-api.us-east-2.amazonaws.com/stage_syngenta_pdn/unregistred-user"; 

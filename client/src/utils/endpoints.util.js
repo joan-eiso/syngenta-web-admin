@@ -1,2 +1,2 @@
-export const authEndpoint = "http://localhost:8000/api/auth";
-export const sessionEndpoint = "http://localhost:8000/api/session";
+export const authEndpoint = "http://localhost:80/api/auth";
+export const sessionEndpoint = "http://localhost:80/api/session";
