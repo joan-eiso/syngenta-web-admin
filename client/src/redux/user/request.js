@@ -5,7 +5,6 @@ export function requestUsers(encodedPayload) {
   return axios.request({
     method: "POST",
     url: sessionEndpoint,
-    // url: `https://cors-anywhere.herokuapp.com/${sessionEndpoint}`,
     data: {
       method: "get_all_users",
       data: encodedPayload,
@@ -17,7 +16,6 @@ export function requestCreateUser(encodedPayload) {
   return axios.request({
     method: "POST",
     url: sessionEndpoint,
-    // url: `https://cors-anywhere.herokuapp.com/${sessionEndpoint}`,
     data: {
       method: "create_users",
       data: encodedPayload,
@@ -29,7 +27,6 @@ export function requestEditUser(encodedPayload) {
   return axios.request({
     method: "POST",
     url: sessionEndpoint,
-    // url: `https://cors-anywhere.herokuapp.com/${sessionEndpoint}`,
     data: {
       method: "edit_users",
       data: encodedPayload,
