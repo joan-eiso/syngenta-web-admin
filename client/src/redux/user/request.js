@@ -1,7 +1,7 @@
 import axios from "axios";
 import { sessionEndpoint } from "../../utils/endpoints.util";
 
-export function requestUsers(encodedPayload) {
+export function requestFetchUsers(encodedPayload) {
   return axios.request({
     method: "POST",
     url: sessionEndpoint,

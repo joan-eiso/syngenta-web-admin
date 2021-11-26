@@ -26,7 +26,7 @@ const useStyles = createUseStyles({
     outline: "none",
     border: "none",
     borderRadius: 4,
-    backgroundColor: ({ theme, isEnable }) => isEnable ? "#002d72" : theme.colors.gray.light,
+    backgroundColor: ({ theme, isEnable }) => isEnable ? theme.colors.primaryBlue : theme.colors.gray.light,
     color: ({ theme, isEnable }) => isEnable ? "white" : theme.colors.bodyText.light,
     cursor: ({ isEnable }) => isEnable ? "pointer" : "default"
   }

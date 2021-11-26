@@ -1,23 +1,53 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { createUseStyles, useTheme } from "react-jss";
 
 import { useDispatch, useSelector } from "react-redux";
-import { fetchLicenses } from "../../../redux/license/duck";
+import { downloadLicense, onDownloadLicenseReset } from "../../../redux/license/duck";
 
 import FilterButton from "../../atoms/FilterButton/FilterButton";
 import LicenseCard from "../../molecules/cards/LicenseCard/LicenseCard";
 import SearchBar from "../../molecules/SearchBar/SearchBar";
+
+import { searchByQuery } from "../../../utils/search.util";
 
 function LicenseDirectory() {
   const dispatch = useDispatch();
   const token = useSelector(state => state.auth.token);
   const distAuth = useSelector(state => state.auth.distAuth);
   const licenses = useSelector(state => state.license.licenses);
+  const fileToDownload = useSelector(state => state.license.fileToDownload);
+
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchResults, setSearchResults] = useState(undefined);
+  
+  const handleSearch = (query) => {
+    setSearchResults(searchByQuery(query, licenses));
+  }
+  
+  const handleDownload = (id) => {
+    dispatch(downloadLicense(token, distAuth, id, distAuth));
+  }
+
+  const dataURIToBlob = (dataURI) => {
+    const byteString = window.atob(dataURI);
+    const arrayBuffer = new ArrayBuffer(byteString.length);
+    const int8Array = new Uint8Array(arrayBuffer);
+    for (let i = 0; i < byteString.length; i++) {
+      int8Array[i] = byteString.charCodeAt(i);
+    }
+    const blob = new Blob([int8Array], { type: 'application/pdf'});
+    return blob;
+  }
 
   useEffect(() => {
-    dispatch(fetchLicenses(token, distAuth));
-  }, [dispatch, token, distAuth]);
-  
+    if(fileToDownload) {
+      const blob = dataURIToBlob(fileToDownload);
+      const url = URL.createObjectURL(blob);
+      window.open(url, '_blank');
+      dispatch(onDownloadLicenseReset());
+    }
+  }, [dispatch, fileToDownload]);
+
   const theme = useTheme();
   const classes = useStyles({ theme });
   return (
@@ -26,16 +56,17 @@ function LicenseDirectory() {
         <h1 className={classes.title}>Licencias</h1>
         <div className={classes.actions}>
           <FilterButton className={classes.filterButton} />
-          <SearchBar />
+          <SearchBar placeholder="Buscar por ID de licencia" setIsSearching={setIsSearching} handleSearch={handleSearch} />
         </div>
       </header>
       <div className={classes.licenseList}>
-        {licenses.map(license => (
+        {Array.from(isSearching ? searchResults : licenses).map(license => (
           <LicenseCard 
             key={license.id}
             id={license.id}  
             propertyId={license.propertyId}
             date={license.date}
+            handleDownload={handleDownload}
           />
         ))}
       </div>
@@ -52,6 +83,7 @@ const useStyles = createUseStyles({
     display: "flex",
     flexFlow: "column nowrap",
     padding: "10px 20px",
+    overflowY: "scroll",
   },
   
   header: {

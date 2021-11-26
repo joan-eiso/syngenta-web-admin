@@ -19,3 +19,8 @@ h1 {
 p {
   margin: 0;
 }
+
+input {
+  font-family: 'Poppins', sans-serif;
+  line-height: 1.1;
+}

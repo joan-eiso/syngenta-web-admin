@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { createUseStyles, useTheme } from "react-jss";
 import { AnimatePresence } from "framer-motion";
 
-import { useDispatch, useSelector } from "react-redux";
-import { fetchProperties } from "../../../redux/property/duck";
+import { useSelector } from "react-redux";
 
 import FilterButton from "../../atoms/FilterButton/FilterButton";
 import PropertyCard from "../../molecules/cards/PropertyCard/PropertyCard";
@@ -11,22 +10,24 @@ import SearchBar from "../../molecules/SearchBar/SearchBar";
 import Modal from "../Modal/Modal";
 import PropertyDetail from "../dialogs/PropertyDetail/PropertyDetail";
 
+import { searchByQuery } from "../../../utils/search.util";
+
 function PropertyDirectory() {
-  const dispatch = useDispatch();
-  const token = useSelector(state => state.auth.token);
-  const distAuth = useSelector(state => state.auth.distAuth);
   const properties = useSelector(state => state.property.properties);
 
-  useEffect(() => {
-    dispatch(fetchProperties(token, distAuth));
-  }, [dispatch, token, distAuth]);
-
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchResults, setSearchResults] = useState(undefined);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState(undefined);
+
+  const handleSearch = (query) => {
+    setSearchResults(searchByQuery(query, properties));
+  }
 
   const closeModal = () => {
     setModalIsOpen(false);
   }
+
   const handleViewProperty = (id, name, country, department, city, subregion, hectares) => {
     setModalIsOpen(true);
     setSelectedProperty({
@@ -39,27 +40,6 @@ function PropertyDirectory() {
       hectares
     });
   }
-
-  // const properties = [
-  //   {
-  //     id: 1,
-  //     name: "Hacienda El Cóndor Andino",
-  //     country: "Colombia",
-  //     department: "Huila",
-  //     city: "Neiva",
-  //     subregion: "Caribe seco",
-  //     hectares: 350
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Hacienda El Molino",
-  //     country: "Colombia",
-  //     department: "Antioquia",
-  //     city: "Necoclí",
-  //     subregion: "Valle templado",
-  //     hectares: 400
-  //   }
-  // ];
   
   const theme = useTheme();
   const classes = useStyles({ theme });
@@ -79,11 +59,11 @@ function PropertyDirectory() {
         <h1 className={classes.title}>Predios</h1>
         <div className={classes.actions}>
           <FilterButton className={classes.filterButton} />
-          <SearchBar />
+          <SearchBar placeholder="Buscar por nombre del predio" setIsSearching={setIsSearching} handleSearch={handleSearch} />
         </div>
       </header>
       <div className={classes.propertyList}>
-        {properties.map(property => (
+        {Array.from(isSearching ? searchResults : properties).map(property => (
           <PropertyCard 
             key={property.id}  
             id={property.id}  
@@ -109,6 +89,7 @@ const useStyles = createUseStyles({
     display: "flex",
     flexFlow: "column nowrap",
     padding: "10px 20px",
+    overflowY: "scroll",
   },
   
   header: {

@@ -92,15 +92,15 @@ const useStyles = createUseStyles({
     display: "grid",
     height: "100vh",
     grid: {
-      templateColumns: "repeat(12, minmax(10px, 1fr))",
+      templateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
     }
   },
 
   sideNav: {
-    height: "100%",
     grid: {
       column: "1 / 3",
     },
+    height: "100vh",
   },
   
   mainContent: ({ theme }) => ({
@@ -109,7 +109,7 @@ const useStyles = createUseStyles({
     grid: {
       column: "3 / 13"
     },
-    height: "100%",
+    height: "100vh",
     backgroundColor: theme.colors.gray.lightest,
   }),
 

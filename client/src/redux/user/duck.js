@@ -50,7 +50,7 @@ export const createUser = (token, userPayload) => ({
   userPayload
 });
 
-export const onCreateUserSuccess = (users, distributors, administrators) => ({
+export const onCreateUserSuccess = () => ({
   type: CREATE_USER_SUCCESS
 });
 

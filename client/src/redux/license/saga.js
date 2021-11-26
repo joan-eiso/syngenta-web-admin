@@ -1,10 +1,10 @@
 import { take, call, put, all } from "redux-saga/effects";
 import { encodePayload } from '../../utils/jwt.util';
-import { requestLicenses } from "./request";
+import { requestDownloadLicense, requestFetchLicenses } from "./request";
 
-import { FETCH_LICENSES_REQUESTED, onFetchLicensesSuccess, onFetchLicensesFailure } from './duck';
+import { FETCH_LICENSES_REQUESTED, onFetchLicensesSuccess, onFetchLicensesFailure, DOWNLOAD_LICENSE_REQUESTED, onDownloadLicenseSuccess, onDownloadLicenseFailure } from './duck';
 
-export function* fetchProducers() {
+export function* fetchLicenses() {
   while(true) {
     try {
       const {token, distAuth} = yield take(FETCH_LICENSES_REQUESTED);
@@ -13,7 +13,7 @@ export function* fetchProducers() {
         dist_auth: distAuth
       }
       let encodedPayload = encodePayload(payload, token);
-      let { data: { licencias } } = yield call(requestLicenses, encodedPayload);
+      let { data: { licencias, statusCode, message: error } } = yield call(requestFetchLicenses, encodedPayload);
       
       let licenses = licencias.map((license) => ({
         id: license.IDLicencia,
@@ -24,15 +24,39 @@ export function* fetchProducers() {
         hybrids: undefined,
         bags: undefined,
       }));
-      yield put(onFetchLicensesSuccess(licenses));
+
+      if(statusCode === 200) yield put(onFetchLicensesSuccess(licenses));
+      else yield put(onFetchLicensesFailure(error));
     } catch (error) {
       yield put(onFetchLicensesFailure(error));
     }
   }
 }
 
+export function* downloadLicense() {
+  while(true) {
+    try {
+      const { token, distAuth, licenseId, distEmail } = yield take(DOWNLOAD_LICENSE_REQUESTED);
+
+      let payload = {
+        dist_auth: distAuth,
+        id_licencia: licenseId, 
+        email_dist: distEmail
+      }
+      let encodedPayload = encodePayload(payload, token);
+      let { data: { response, statusCode, message: error } } = yield call(requestDownloadLicense, encodedPayload);
+
+      if(statusCode === 200) yield put(onDownloadLicenseSuccess(response));
+      yield put(onDownloadLicenseFailure(error));
+    } catch (error) {
+      yield put(onDownloadLicenseFailure(error));
+    }
+  }
+}
+
 export default function* watcherSaga() {
   yield all([
-    fetchProducers()
+    fetchLicenses(),
+    downloadLicense()
   ]);
 }

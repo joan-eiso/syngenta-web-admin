@@ -1,33 +1,68 @@
+import { useEffect, useState } from "react";
 import { createUseStyles, useTheme } from "react-jss";
+import { AnimatePresence } from "framer-motion";
 import { RiSeedlingLine } from "react-icons/ri";
 import { BiChip, BiAtom } from "react-icons/bi";
 
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCrops } from "../../../redux/product/duck";
+
+import CreateForm from "./CreateForm";
 import ProductCategoryCard from "../../molecules/cards/ProductCategoryCard/ProductCategoryCard";
+import Modal from "../Modal/Modal";
 
 function ProductDirectory() {
+  const dispatch = useDispatch();
+  const token = useSelector(state => state.auth.token);
+  const distAuth = useSelector(state => state.auth.distAuth);
+  const crops = useSelector(state => state.product.crops);
+  const technologies = useSelector(state => state.product.technologies);
+  const techTraits = useSelector(state => state.product.techTraits);
+
+  useEffect(() => {
+    dispatch(fetchCrops(token, distAuth));
+  }, [dispatch, token, distAuth]);
+  
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  }
+  
   const theme = useTheme();
   const classes = useStyles({ theme });
   return (
     <div className={classes.root}>
+      <AnimatePresence
+        initial="none"
+        exitBeforeEnter={true}
+        >
+        {modalIsOpen && 
+          <Modal handleClose={closeModal}>
+            <CreateForm handleClose={closeModal} />
+          </Modal>
+        }
+      </AnimatePresence>
       <header className={classes.header}>
         <h1 className={classes.title}>Productos</h1>
       </header>
       <div className={classes.productList}>
         <ProductCategoryCard 
+          onCreateIsEnable
           categoryName="Cultivos" 
           Icon={({ className, color }) => <RiSeedlingLine className={className} color={color} />} 
-          data={null} 
-          isEnable
+          items={crops}
+          setModalIsOpen={setModalIsOpen}
         />
         <ProductCategoryCard 
           categoryName="Tecnologías" 
           Icon={({ className, color }) => <BiChip className={className} color={color} />} 
-          data={null} 
+          items={technologies}
         />
         <ProductCategoryCard 
           categoryName="Características tecnológicas" 
           Icon={({ className, color }) => <BiAtom className={className} color={color} />} 
-          data={null} 
+          items={techTraits}
         />
       </div>
     </div>
@@ -41,7 +76,8 @@ const useStyles = createUseStyles({
     flex: 1,
     display: "flex",
     flexFlow: "column nowrap",
-    padding: "10px 20px",
+    padding: "10px 20px 40px",
+    overflowY: "scroll"
   },
   
   header: {
@@ -56,11 +92,12 @@ const useStyles = createUseStyles({
   }),
 
   productList: {
-    display: "grid",
-    grid: {
-      templateRows: "repeat(3, minmax(10px, 120px))",
-      gap: 20,
-    },
+    display: "flex",
+    flexFlow: "column",
+
+    "& > div:not(:last-child)": {
+      marginBottom: 20,
+    }
   },
   
   divider: {

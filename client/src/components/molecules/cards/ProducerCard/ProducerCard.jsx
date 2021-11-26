@@ -24,7 +24,7 @@ const useStyles = createUseStyles({
   root: {
     display: "grid",
     grid: {
-      templateColumns: "minmax(10px, 1fr) minmax(10px, 2fr)",
+      templateColumns: "minmax(10px, 1fr) minmax(10px, 1fr)",
     },
     alignItems: "center",
     padding: "20px 30px",

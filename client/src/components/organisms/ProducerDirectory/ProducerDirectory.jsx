@@ -1,22 +1,23 @@
-import { useEffect } from "react";
+import { useState } from "react";
 import { createUseStyles, useTheme } from "react-jss";
 
-import { useDispatch, useSelector } from "react-redux";
-import { fetchProducers } from "../../../redux/producer/duck";
+import { useSelector } from "react-redux";
 
 import FilterButton from "../../atoms/FilterButton/FilterButton";
 import ProducerCard from "../../molecules/cards/ProducerCard/ProducerCard";
 import SearchBar from "../../molecules/SearchBar/SearchBar";
 
+import { searchByQuery } from "../../../utils/search.util";
+
 function ProducerDirectory() {
-  const dispatch = useDispatch();
-  const token = useSelector(state => state.auth.token);
-  const distAuth = useSelector(state => state.auth.distAuth);
   const producers = useSelector(state => state.producer.producers);
 
-  useEffect(() => {
-    dispatch(fetchProducers(token, distAuth));
-  }, [dispatch, token, distAuth]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchResults, setSearchResults] = useState(undefined);
+
+  const handleSearch = (query) => {
+    setSearchResults(searchByQuery(query, producers));
+  }
   
   const theme = useTheme();
   const classes = useStyles({ theme });
@@ -26,11 +27,11 @@ function ProducerDirectory() {
         <h1 className={classes.title}>Productores</h1>
         <div className={classes.actions}>
           <FilterButton className={classes.filterButton} />
-          <SearchBar />
+          <SearchBar placeholder="Buscar por nombre del productor" setIsSearching={setIsSearching} handleSearch={handleSearch} />
         </div>
       </header>
       <div className={classes.producerList}>
-        {producers.map(producer => (
+        {Array.from(isSearching ? searchResults : producers).map(producer => (
           <ProducerCard 
             key={producer.id}  
             id={producer.id}  
@@ -52,6 +53,7 @@ const useStyles = createUseStyles({
     display: "flex",
     flexFlow: "column nowrap",
     padding: "10px 20px",
+    overflowY: "scroll",
   },
   
   header: {

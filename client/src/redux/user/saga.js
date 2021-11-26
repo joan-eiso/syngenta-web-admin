@@ -1,6 +1,6 @@
 import { take, call, put, all } from "redux-saga/effects";
 import { encodePayload } from '../../utils/jwt.util';
-import { requestCreateUser, requestEditUser, requestUsers } from "./request";
+import { requestCreateUser, requestEditUser, requestFetchUsers } from "./request";
 
 import { CREATE_USER_REQUESTED, EDIT_USER_REQUESTED, FETCH_USERS_REQUESTED, onCreateUserFailure, onCreateUserSuccess, onEditUserFailure, onEditUserSuccess, onFetchUsersFailure, onFetchUsersSuccess } from './duck';
 
@@ -13,7 +13,7 @@ export function* fetchUsers() {
         dist_auth: distAuth
       }
       let encodedPayload = encodePayload(payload, token);
-      let { data: { users: usuarios } } = yield call(requestUsers, encodedPayload);
+      let { data: { users: usuarios } } = yield call(requestFetchUsers, encodedPayload);
       
       let users = [];
       let distributors = [];

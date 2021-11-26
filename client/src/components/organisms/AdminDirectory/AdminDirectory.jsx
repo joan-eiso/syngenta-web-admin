@@ -13,6 +13,8 @@ import SearchBar from "../../molecules/SearchBar/SearchBar";
 import Modal from "../Modal/Modal";
 import EditForm from "./EditForm";
 
+import { searchByQuery } from "../../../utils/search.util";
+
 function AdminDirectory() {
   const dispatch = useDispatch();
   const token = useSelector(state => state.auth.token);
@@ -23,9 +25,15 @@ function AdminDirectory() {
     dispatch(fetchUsers(token, distAuth));
   }, [dispatch, token, distAuth]);
 
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchResults, setSearchResults] = useState(undefined);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState(undefined);
 
+  const handleSearch = (query) => {
+    setSearchResults(searchByQuery(query, administrators));
+  }
+  
   const closeModal = () => {
     setModalIsOpen(false);
   }
@@ -70,12 +78,12 @@ function AdminDirectory() {
         <h1 className={classes.title}>Administradores</h1>
         <div className={classes.actions}>
           <FilterButton className={classes.filterButton} />
-          <SearchBar />
+          <SearchBar placeholder="Buscar por nombre del administrador" setIsSearching={setIsSearching} handleSearch={handleSearch} />
           <Button className={classes.createButton} label="Crear" onClick={handleCreate} />      
         </div>
       </header>
-      <div className={classes.userList}>
-        {administrators.map(administrator => (
+      <div className={classes.adminList}>
+        {Array.from(isSearching ? searchResults : administrators).map(administrator => (
           <UserCard 
             key={administrator.id}  
             id={administrator.id}  
@@ -95,6 +103,7 @@ const useStyles = createUseStyles({
     display: "flex",
     flexFlow: "column nowrap",
     padding: "10px 20px",
+    overflowY: "scroll"
   },
   
   header: {
@@ -124,12 +133,12 @@ const useStyles = createUseStyles({
     marginLeft: 20,
   },
   
-  userList: {
+  adminList: {
     flex: 1,
     display: "grid",
     grid: {
-      templateColumns: "repeat(4, minmax(10px, 1fr))",
-      templateRows: "repeat(2, minmax(10px, 1fr))",
+      templateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+      templateRows: "repeat(auto-fill, minmax(200px, 1fr))",
       gap: "10px",
     },
   }

@@ -11,7 +11,7 @@ export function requestLogin(email, password) {
           "email": email,
           "pass": password
       }
-    },
+    }
   });
 }
 

@@ -13,6 +13,8 @@ import DistributorCard from "../../molecules/cards/DistributorCard/DistributorCa
 import SearchBar from "../../molecules/SearchBar/SearchBar";
 import Modal from "../Modal/Modal";
 
+import { searchByQuery } from "../../../utils/search.util";
+
 function DistributorDirectory() {
   const dispatch = useDispatch();
   const token = useSelector(state => state.auth.token);
@@ -23,8 +25,14 @@ function DistributorDirectory() {
     dispatch(fetchUsers(token, distAuth));
   }, [dispatch, token, distAuth]);
 
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchResults, setSearchResults] = useState(undefined);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedDist, setSelectedDist] = useState(undefined);
+
+  const handleSearch = (query) => {
+    setSearchResults(searchByQuery(query, distributors));
+  }
 
   const closeModal = () => {
     setModalIsOpen(false);
@@ -70,12 +78,12 @@ function DistributorDirectory() {
         <h1 className={classes.title}>Distribuidores</h1>
         <div className={classes.actions}>
           <FilterButton className={classes.filterButton} />
-          <SearchBar />
+          <SearchBar placeholder="Buscar por nombre del distribuidor" setIsSearching={setIsSearching} handleSearch={handleSearch} />
           <Button className={classes.createButton} label="Crear" onClick={handleCreate} />      
         </div>
       </header>
       <div className={classes.distributorList}>
-        {distributors.map(distributor => (
+        {Array.from(isSearching ? searchResults : distributors).map(distributor => (
           <DistributorCard 
             key={distributor.id}  
             id={distributor.id}  
@@ -95,6 +103,7 @@ const useStyles = createUseStyles({
     display: "flex",
     flexFlow: "column nowrap",
     padding: "10px 20px",
+    overflowY: "scroll",
   },
   
   header: {
@@ -128,8 +137,8 @@ const useStyles = createUseStyles({
     flex: 1,
     display: "grid",
     grid: {
-      templateColumns: "repeat(4, minmax(10px, 1fr))",
-      templateRows: "repeat(2, minmax(10px, 1fr))",
+      templateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+      templateRows: "repeat(auto-fill, minmax(200px, 1fr))",
       gap: "10px",
     },
   }

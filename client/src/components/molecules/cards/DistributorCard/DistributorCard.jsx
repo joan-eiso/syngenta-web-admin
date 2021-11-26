@@ -49,13 +49,13 @@ const useStyles = createUseStyles({
     justifyContent: "space-between",
     alignItems: "center",
     width: "100%",
-    height: "100%",
     padding: "20px 30px",
     borderRadius: 8,
     backgroundColor: "white",
   },
-  
+
   name: {
+    margin: "30px 0px",
     fontWeight: 700,
     textAlign: "center",
     lineHeight: 1.2,
