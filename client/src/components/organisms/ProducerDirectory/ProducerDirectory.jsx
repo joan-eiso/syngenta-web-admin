@@ -3,7 +3,7 @@ import { createUseStyles, useTheme } from "react-jss";
 
 import { useSelector } from "react-redux";
 
-import FilterButton from "../../atoms/FilterButton/FilterButton";
+// import FilterButton from "../../atoms/FilterButton/FilterButton";
 import ProducerCard from "../../molecules/cards/ProducerCard/ProducerCard";
 import SearchBar from "../../molecules/SearchBar/SearchBar";
 
@@ -23,14 +23,14 @@ function ProducerDirectory() {
   const classes = useStyles({ theme });
   return (
     <div className={classes.root}>
-      <header className={classes.header}>
+      <div className={classes.listHeader}>
         <h1 className={classes.title}>Productores</h1>
         <div className={classes.actions}>
-          <FilterButton className={classes.filterButton} />
+          {/* <FilterButton className={classes.filterButton} /> */}
           <SearchBar placeholder="Buscar por nombre del productor" setIsSearching={setIsSearching} handleSearch={handleSearch} />
         </div>
-      </header>
-      <div className={classes.producerList}>
+      </div>
+      <section className={classes.producerList}>
         {Array.from(isSearching ? searchResults : producers).map(producer => (
           <ProducerCard 
             key={producer.id}  
@@ -40,7 +40,7 @@ function ProducerDirectory() {
             propertyQuantity={producer.propertyQuantity}
           />
         ))}
-      </div>
+      </section>
     </div>
   )
 }
@@ -56,7 +56,7 @@ const useStyles = createUseStyles({
     overflowY: "scroll",
   },
   
-  header: {
+  listHeader: {
     display: "flex",
     justifyContent: "space-between",
     marginBottom: 10,
@@ -83,8 +83,7 @@ const useStyles = createUseStyles({
     flex: 1,
     display: "grid",
     grid: {
-      templateColumns: "minmax(10px, 1fr)",
-      templateRows: "repeat(4, minmax(10px, 1fr))",
+      templateRows: "repeat(auto-fill, 120px)",
       rowGap: "10px",
     },
   }

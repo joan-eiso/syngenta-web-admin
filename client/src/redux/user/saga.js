@@ -4,7 +4,7 @@ import { requestCreateUser, requestEditUser, requestFetchUsers } from "./request
 
 import { CREATE_USER_REQUESTED, EDIT_USER_REQUESTED, FETCH_USERS_REQUESTED, onCreateUserFailure, onCreateUserSuccess, onEditUserFailure, onEditUserSuccess, onFetchUsersFailure, onFetchUsersSuccess } from './duck';
 
-export function* fetchUsers() {
+function* fetchUsers() {
   while(true) {
     try {
       const {token, distAuth} = yield take(FETCH_USERS_REQUESTED);
@@ -45,7 +45,7 @@ export function* fetchUsers() {
   }
 }
 
-export function* createUser() {
+function* createUser() {
   while(true) {
     try {
       const { token, userPayload } = yield take(CREATE_USER_REQUESTED);
@@ -71,7 +71,7 @@ export function* createUser() {
   }
 }
 
-export function* editUser() {
+function* editUser() {
   while(true) {
     try {
       const { token, userPayload } = yield take(EDIT_USER_REQUESTED);

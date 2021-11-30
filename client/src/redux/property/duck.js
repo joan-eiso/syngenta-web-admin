@@ -1,10 +1,13 @@
 export const FETCH_PROPERTIES_REQUESTED = "/property/FETCH_PROPERTIES/REQUESTED";
 export const FETCH_PROPERTIES_SUCCESS = "/property/FETCH_PROPERTIES/SUCCESS";
 export const FETCH_PROPERTIES_FAILURE = "/property/FETCH_PROPERTIES/FAILURE";
+export const NOTIFY_CLIENT = "/property/NOTIFY_CLIENT";
 
 const initialState = {
   properties: [],
-  fetchError: undefined,
+  hectareCount: undefined,
+  fetchPropertiesSucceed: undefined,
+  fetchPropertiesError: undefined,
 }
 
 export const fetchProperties = (token, distAuth) => ({
@@ -13,9 +16,10 @@ export const fetchProperties = (token, distAuth) => ({
   distAuth
 });
 
-export const onFetchPropertiesSuccess = (properties) => ({
+export const onFetchPropertiesSuccess = (properties, hectareCount) => ({
   type: FETCH_PROPERTIES_SUCCESS,
-  properties
+  properties,
+  hectareCount
 });
 
 export const onFetchPropertiesFailure = (error) => ({
@@ -23,19 +27,28 @@ export const onFetchPropertiesFailure = (error) => ({
   error
 });
 
+export const notifyClient = (propertyId) => ({
+  type: NOTIFY_CLIENT,
+  propertyId
+});
+
 const reducer = (state = initialState, action) => {
   let type = action.type;
   switch(type) {
     case FETCH_PROPERTIES_SUCCESS:
       let properties = action.properties;
+      let hectareCount = action.hectareCount;
       return {
-        ...state, properties
+        ...state, 
+        properties,
+        hectareCount,
+        fetchPropertiesSucceed: true
       }
 
     case FETCH_PROPERTIES_FAILURE:
-      let error = action.error;
+      let fetchPropertiesError = action.error;
       return {
-        ...state, fetchError: error
+        ...state, fetchPropertiesError
       }
 
     default:

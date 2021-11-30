@@ -1,16 +1,24 @@
 import { createUseStyles, useTheme } from "react-jss";
+import { useSelector } from "react-redux";
 
 import Metric from "../../molecules/Metric/Metric";
 import LineChart from "../analytics/LineChart/LineChart";
 
 function Dashboard() {
+  const producers = useSelector(state => state.producer.producers);
+  const hectareCount = useSelector(state => state.property.hectareCount);
+  const totalProducers = producers.length;
+  const clientCount = producers.filter((producer) => producer.isClient).length;
+  const prospectCount = totalProducers - clientCount;
+  const penPercentage = clientCount * 100 / totalProducers;
+
   const theme = useTheme();
   const classes = useStyles({ theme });
   return (
     <div className={classes.root}>
-      <header className={classes.header}>
+      <div className={classes.dashboardHeader}>
         <h1 className={classes.title}>Resumen</h1>
-      </header>
+      </div>
       <section className={classes.topSection}>
         <div className={classes.topSectionHeadingContainer}>
           <p className={classes.topSectionHeading}>Agricultores</p>
@@ -19,46 +27,39 @@ function Dashboard() {
         <div className={classes.topSectionMetrics}>
           <Metric 
             title="Total de productores" 
-            value={100} 
+            value={totalProducers} 
             label="Total de productores únicos con y sin licencias vigentes" 
             backgroundColor={theme.colors.gray.lightest}
             color="#029EBF"
-            />          
+          />          
           <Metric 
             title="Total de clientes" 
-            value={100} 
-            label="Total de productores únicos con y sin licencias vigentes" 
+            value={clientCount} 
+            label="Total de productores únicos con licencias vigentes" 
             backgroundColor={theme.colors.gray.lightest}
             color="#EF7D00"
-            />          
-          <Metric 
-            title="Clientes 2021 a la fecha" 
-            value={100} 
-            label="Total de productores únicos con y sin licencias vigentes" 
-            backgroundColor={theme.colors.gray.lightest}
-            color="#85CFE6"
-            />          
+          />            
           <Metric 
             title="% de retención" 
-            value={100} 
-            label="Total de productores únicos con y sin licencias vigentes" 
+            value="0%"
+            label="% de clientes que compraron en ambas campañas" 
             backgroundColor={theme.colors.gray.lightest}
             color="#F9B002"
             />          
           <Metric 
             title="Total de hectáreas de maíz" 
-            value={100} 
-            label="Total de productores únicos con y sin licencias vigentes" 
+            value={hectareCount} 
+            label="Total de hectáreas de maíz en agricultores con licencia y sin licencia" 
             backgroundColor={theme.colors.gray.lightest}
             color="#B9C41A"
-            />          
+          />          
           <Metric 
             title="Cantidad de prospectos" 
-            value={100} 
-            label="Total de productores únicos con y sin licencias vigentes" 
+            value={prospectCount} 
+            label="Total agricultores sin firma de licencia en año actual" 
             backgroundColor={theme.colors.gray.lightest}
             color="#6A75B2"
-            />          
+          />          
         </div>
       </section>
       <section className={classes.middleSection}>
@@ -67,18 +68,21 @@ function Dashboard() {
         </div>
         <Metric 
           title="% de penetración" 
-          value={100} 
-          label="Total de productores únicos con y sin licencias vigentes" 
-          backgroundColor="white"
-          color="#002D72"
-          />
-        <Metric 
-          title="Participación de cliente" 
-          value={100} 
-          label="Total de productores únicos con y sin licencias vigentes" 
+          value={`${penPercentage}%`} 
+          label="% de clientes sobre la base total de agricultores" 
           backgroundColor="white"
           color="#002D72"
         />
+        <Metric 
+          title="Participación de cliente" 
+          value={`-`} 
+          label="Cantidad de bolsas en productores en campaña actual / cantidad de hectáreas relevadas totales de maíz" 
+          backgroundColor="white"
+          color="#002D72"
+      />
+      </section>
+      <section className={classes.actions}>
+        <a href="https://eiso.co/syngenta/reporte_01.php" target="_blank" rel="noreferrer">DESCARGAR INFORMACIÓN</a>
       </section>
     </div>
   )
@@ -88,14 +92,14 @@ export default Dashboard;
 
 const useStyles = createUseStyles({
   root: {
-    height: "90vh",
+    flex: 1,
     display: "flex",
     flexFlow: "column nowrap",
-    padding: "10px 20px",
+    padding: "10px 20px 20px",
     overflowY: "scroll"
   },
   
-  header: {
+  dashboardHeader: {
     display: "flex",
     marginBottom: 10,
   },
@@ -142,7 +146,7 @@ const useStyles = createUseStyles({
   topSectionMetrics: {
     display: "grid",
     grid: {
-      templateColumns: "repeat(6, minmax(10px, 1fr))",
+      templateColumns: "repeat(5, minmax(10px, 1fr))",
       gap: 10,
     },    
     justifyContent: "space-between",
@@ -159,7 +163,8 @@ const useStyles = createUseStyles({
       templateColumns: "minmax(10px, 2fr) minmax(10px, 1fr)",
       templateRows: "repeat(2, minmax(10px, 1fr))",
       gap: 10,
-    }
+    },
+    marginBottom: 40,
   },
 
   tendencyGraphContainer: {
@@ -168,5 +173,25 @@ const useStyles = createUseStyles({
     },
     borderRadius: 8,
     backgroundColor: "white"
+  },
+
+  actions: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+
+    "& > a": {
+      padding: "10px 40px",
+      fontSize: 12,
+      fontWeight: 300,
+      letterSpacing: "1px",
+      textTransform: "uppercase",
+      outline: "none",
+      border: "none",
+      borderRadius: 4,
+      backgroundColor: ({ theme}) => theme.colors.primaryBlue,
+      color: ({ theme }) => "white",
+      textDecoration: "none"
+    }
   }
 });

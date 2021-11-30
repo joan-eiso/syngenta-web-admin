@@ -5,7 +5,7 @@ import { requestCreateCrop, requestFetchCrops, requestFetchTechnologies, request
 
 import { encodePayload } from "../../utils/jwt.util";
 
-export function* fetchCrops() {
+function* fetchCrops() {
   while(true) {
     try {
       const { token, distAuth } = yield take(FETCH_CROPS_REQUESTED);
@@ -27,7 +27,7 @@ export function* fetchCrops() {
   }
 }
 
-export function* createCrop() {
+function* createCrop() {
   while(true) {
     try {
       const { token, distAuth, name } = yield take(CREATE_CROP_REQUESTED);
@@ -48,7 +48,7 @@ export function* createCrop() {
   }
 }
 
-export function* fetchTechnologies() {
+function* fetchTechnologies() {
   while(true) {
     try {
       const { token, distAuth } = yield take(FETCH_TECHNOLOGIES_REQUESTED);
@@ -70,7 +70,7 @@ export function* fetchTechnologies() {
   }
 }
 
-export function* fetchTechTraits() {
+function* fetchTechTraits() {
   while(true) {
     try {
       const { token, distAuth } = yield take(FETCH_TECH_TRAITS_REQUESTED);

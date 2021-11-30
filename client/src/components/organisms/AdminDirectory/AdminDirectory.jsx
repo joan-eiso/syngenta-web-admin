@@ -1,29 +1,21 @@
-import { useEffect, useState } from "react";
-import { createUseStyles, useTheme } from "react-jss";
+import { useState } from "react";
 import { useHistory } from "react-router";
+import { createUseStyles, useTheme } from "react-jss";
 import { AnimatePresence } from "framer-motion";
 
-import { useDispatch, useSelector } from "react-redux";
-import { fetchUsers } from "../../../redux/user/duck";
+import { useSelector } from "react-redux";
 
+import EditForm from "./EditForm";
 import Button from "../../atoms/Button/Button";
-import FilterButton from "../../atoms/FilterButton/FilterButton";
+// import FilterButton from "../../atoms/FilterButton/FilterButton";
 import UserCard from "../../molecules/cards/AdminCard/AdminCard";
 import SearchBar from "../../molecules/SearchBar/SearchBar";
 import Modal from "../Modal/Modal";
-import EditForm from "./EditForm";
 
 import { searchByQuery } from "../../../utils/search.util";
 
 function AdminDirectory() {
-  const dispatch = useDispatch();
-  const token = useSelector(state => state.auth.token);
-  const distAuth = useSelector(state => state.auth.distAuth);
   const administrators = useSelector(state => state.user.administrators);
-
-  useEffect(() => {
-    dispatch(fetchUsers(token, distAuth));
-  }, [dispatch, token, distAuth]);
 
   const [isSearching, setIsSearching] = useState(false);
   const [searchResults, setSearchResults] = useState(undefined);
@@ -74,15 +66,15 @@ function AdminDirectory() {
           </Modal>
         }
       </AnimatePresence>
-      <header className={classes.header}>
+      <div className={classes.listHeader}>
         <h1 className={classes.title}>Administradores</h1>
         <div className={classes.actions}>
-          <FilterButton className={classes.filterButton} />
+          {/* <FilterButton className={classes.filterButton} /> */}
           <SearchBar placeholder="Buscar por nombre del administrador" setIsSearching={setIsSearching} handleSearch={handleSearch} />
           <Button className={classes.createButton} label="Crear" onClick={handleCreate} />      
         </div>
-      </header>
-      <div className={classes.adminList}>
+      </div>
+      <section className={classes.adminList}>
         {Array.from(isSearching ? searchResults : administrators).map(administrator => (
           <UserCard 
             key={administrator.id}  
@@ -90,7 +82,7 @@ function AdminDirectory() {
             onEdit={handleEditUser}
           />
         ))}
-      </div>
+      </section>
     </div>
   )
 }
@@ -106,7 +98,7 @@ const useStyles = createUseStyles({
     overflowY: "scroll"
   },
   
-  header: {
+  listHeader: {
     display: "flex",
     justifyContent: "space-between",
     marginBottom: 10,

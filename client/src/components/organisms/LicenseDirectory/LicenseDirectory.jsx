@@ -4,7 +4,7 @@ import { createUseStyles, useTheme } from "react-jss";
 import { useDispatch, useSelector } from "react-redux";
 import { downloadLicense, onDownloadLicenseReset } from "../../../redux/license/duck";
 
-import FilterButton from "../../atoms/FilterButton/FilterButton";
+// import FilterButton from "../../atoms/FilterButton/FilterButton";
 import LicenseCard from "../../molecules/cards/LicenseCard/LicenseCard";
 import SearchBar from "../../molecules/SearchBar/SearchBar";
 
@@ -52,14 +52,14 @@ function LicenseDirectory() {
   const classes = useStyles({ theme });
   return (
     <div className={classes.root}>
-      <header className={classes.header}>
+      <div className={classes.listHeader}>
         <h1 className={classes.title}>Licencias</h1>
         <div className={classes.actions}>
-          <FilterButton className={classes.filterButton} />
+          {/* <FilterButton className={classes.filterButton} /> */}
           <SearchBar placeholder="Buscar por ID de licencia" setIsSearching={setIsSearching} handleSearch={handleSearch} />
         </div>
-      </header>
-      <div className={classes.licenseList}>
+      </div>
+      <section className={classes.licenseList}>
         {Array.from(isSearching ? searchResults : licenses).map(license => (
           <LicenseCard 
             key={license.id}
@@ -69,7 +69,7 @@ function LicenseDirectory() {
             handleDownload={handleDownload}
           />
         ))}
-      </div>
+      </section>
     </div>
   )
 }
@@ -86,7 +86,7 @@ const useStyles = createUseStyles({
     overflowY: "scroll",
   },
   
-  header: {
+  listHeader: {
     display: "flex",
     justifyContent: "space-between",
     marginBottom: 10,
@@ -113,8 +113,7 @@ const useStyles = createUseStyles({
     flex: 1,
     display: "grid",
     grid: {
-      templateColumns: "minmax(10px, 1fr)",
-      templateRows: "repeat(4, minmax(10px, 1fr))",
+      templateRows: "repeat(auto-fill, 120px)",
       rowGap: "10px",
     },
   }

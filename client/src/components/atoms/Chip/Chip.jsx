@@ -16,6 +16,7 @@ const useStyles = createUseStyles({
   root: {
     display: "flex",
     justifyContent: "center",
+    alignItems: "center",
     padding: "10px 30px",
     borderRadius: 8,
     backgroundColor: ({ theme, color }) => color ? color : theme.colors.gray.lightest,
@@ -25,6 +26,7 @@ const useStyles = createUseStyles({
     fontSize: 12,
     fontWeight: 400,
     color: ({ textColor }) => textColor,
+    textAlign: "center",
     textTransform: "uppercase",
     letterSpacing: 1,
   }

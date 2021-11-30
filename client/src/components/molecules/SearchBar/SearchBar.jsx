@@ -30,7 +30,7 @@ const useStyles = createUseStyles({
     flex: 1,
     display: "flex",
     alignItems: "center",
-    padding: "10px 20px",
+    padding: "6px 20px",
     border: {
       style: "solid",
       width: 1,

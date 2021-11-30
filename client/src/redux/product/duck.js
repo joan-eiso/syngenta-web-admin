@@ -16,10 +16,13 @@ const initialState = {
   crops: [],
   technologies: [],
   techTraits: [],
+  fetchCropsSucceed: undefined,
   fetchCropsError: undefined,
   createCropSucceed: undefined,
   createCropError: undefined,
+  fetchTechnologiesSucceed: undefined,
   fetchTechnologiesError: undefined,
+  fetchTechTraitsSucceed: undefined,
   fetchTechTraitsError: undefined,
 }
 
@@ -98,7 +101,8 @@ const reducer = (state = initialState, action) => {
       let { crops } = action;
       return {
         ...state, 
-        crops
+        crops,
+        fetchCropsSucceed: true
       }
 
     case FETCH_CROPS_FAILURE:
@@ -129,7 +133,8 @@ const reducer = (state = initialState, action) => {
       let { technologies } = action;
       return {
         ...state, 
-        technologies
+        technologies,
+        fetchTechnologiesSucceed: true
       }
 
     case FETCH_TECHNOLOGIES_FAILURE:
@@ -142,7 +147,8 @@ const reducer = (state = initialState, action) => {
       let { techTraits } = action;
       return {
         ...state, 
-        techTraits
+        techTraits,
+        fetchTechTraitsSucceed: true
       }
 
     case FETCH_TECH_TRAITS_FAILURE:

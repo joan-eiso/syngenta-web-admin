@@ -8,7 +8,8 @@ export const DOWNLOAD_LICENSE_RESET = "/license/DOWNLOAD_LICENSE/RESET";
 
 const initialState = {
   licenses: [],
-  fetchError: undefined,
+  fetchLicensesSucceed: undefined,
+  fetchLicensesError: undefined,
   fileToDownload: undefined,
   downloadLicenseError: undefined,
 }
@@ -57,13 +58,15 @@ const reducer = (state = initialState, action) => {
     case FETCH_LICENSES_SUCCESS:
       let licenses = action.licenses;
       return {
-        ...state, licenses
+        ...state, 
+        licenses,
+        fetchLicensesSucceed: true
       }
 
     case FETCH_LICENSES_FAILURE:
-      let error = action.error;
+      let fetchLicensesError = action.error;
       return {
-        ...state, fetchError: error
+        ...state, fetchLicensesError
       }
 
     case DOWNLOAD_LICENSE_SUCCESS:

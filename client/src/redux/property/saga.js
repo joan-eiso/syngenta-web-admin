@@ -1,10 +1,11 @@
-import { take, call, put, all } from "redux-saga/effects";
+import { take, call, put, select, takeEvery, all } from "redux-saga/effects";
 import { encodePayload } from '../../utils/jwt.util';
-import { requestProperties } from "./request";
+import { requestFetchProperties } from "./request";
 
-import { FETCH_PROPERTIES_REQUESTED, onFetchPropertiesSuccess, onFetchPropertiesFailure } from './duck';
+import { FETCH_PROPERTIES_REQUESTED, onFetchPropertiesSuccess, onFetchPropertiesFailure, NOTIFY_CLIENT } from './duck';
+import { setProducerAsClient } from "../producer/duck";
 
-export function* fetchProperties() {
+function* fetchProperties() {
   while(true) {
     try {
       const { token, distAuth } = yield take(FETCH_PROPERTIES_REQUESTED);
@@ -13,10 +14,12 @@ export function* fetchProperties() {
         dist_auth: distAuth
       }
       let encodedPayload = encodePayload(payload, token);
-      let { data: { predios } } = yield call(requestProperties, encodedPayload);
-      
+      let { data: { predios } } = yield call(requestFetchProperties, encodedPayload);
+
+      let hectareCount = 0;
       let properties = predios.map((predio) => {
         let parsedHectares = parseInt(predio.hectareas);
+        hectareCount += parsedHectares;
         return {
           id: predio.IDPredio,
           name: predio.vereda,
@@ -35,15 +38,24 @@ export function* fetchProperties() {
           propertyHash: predio.hashPredio,
         }
       });
-      yield put(onFetchPropertiesSuccess(properties));
+      yield put(onFetchPropertiesSuccess(properties, hectareCount));
     } catch (error) {
       yield put(onFetchPropertiesFailure(error));
     }
   }
 }
 
+function* notifyClient(action) {
+  let propertyId = action.propertyId;
+  let properties = yield select(state => state.property.properties);
+  let property = properties.find((property) => property.id === propertyId);
+
+  yield put(setProducerAsClient(property.producerId));
+}
+
 export default function* watcherSaga() {
   yield all([
-    fetchProperties()
+    fetchProperties(),
+    takeEvery(NOTIFY_CLIENT, notifyClient)
   ]);
 }

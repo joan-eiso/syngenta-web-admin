@@ -1,12 +1,12 @@
 import { createUseStyles, useTheme } from "react-jss";
 import { RiMenu2Line } from "react-icons/ri";
 
-function TopBar() {
+function TopBar({ onSidebarToggle }) {
   const theme = useTheme();
   const classes = useStyles({ theme });
   return (
     <div className={classes.root}>
-      <RiMenu2Line size={18} color={theme.colors.primaryBlue} />
+      <RiMenu2Line size={18} color={theme.colors.primaryBlue} cursor="pointer" onClick={onSidebarToggle} />
     </div>
   )
 }

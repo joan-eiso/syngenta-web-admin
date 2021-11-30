@@ -1,6 +1,7 @@
 export const LOGIN_REQUESTED = "/authentication/LOGIN/REQUESTED";
 export const LOGIN_SUCCESS = "/authentication/LOGIN/SUCCESS";
 export const LOGIN_FAILURE = "/authentication/LOGIN/FAILURE";
+export const LOAD_DATA_SUCCESS = "/authentication/LOAD_DATA/SUCCESS";
 export const LOGOUT = "/authentication/LOGOUT";
 export const RESET_PWD_RECOVERY_STATUS = "/authentication/RESET_PWD_RECOVERY_STATUS";
 export const SEND_PWD_RECOVERY_CODE_REQUESTED = "/authentication/SEND_PWD_RECOVERY_CODE/REQUESTED";
@@ -26,6 +27,7 @@ const initialState = {
   token: undefined,
   distAuth: undefined,
   loginError: undefined,
+  loadDataSucceed: undefined,
   ...initialPwdRecoveryStatus
 };
 
@@ -44,6 +46,10 @@ export const onLoginSuccess = (token, distAuth) => ({
 export const onLoginFailure = (error) => ({
   type: LOGIN_FAILURE,
   error,
+});
+
+export const onLoadDataSuccess = () => ({
+  type: LOAD_DATA_SUCCESS,
 });
 
 export const resetPwdRecoveryStatus = () => ({
@@ -107,6 +113,12 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         loginError: action.error,
+      };
+
+    case LOAD_DATA_SUCCESS: 
+      return {
+        ...state,
+        loadDataSucceed: true,
       };
       
       case LOGOUT: 

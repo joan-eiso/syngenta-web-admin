@@ -43,10 +43,10 @@ function ProductDirectory() {
           </Modal>
         }
       </AnimatePresence>
-      <header className={classes.header}>
+      <div className={classes.listHeader}>
         <h1 className={classes.title}>Productos</h1>
-      </header>
-      <div className={classes.productList}>
+      </div>
+      <section className={classes.productList}>
         <ProductCategoryCard 
           onCreateIsEnable
           categoryName="Cultivos" 
@@ -64,7 +64,7 @@ function ProductDirectory() {
           Icon={({ className, color }) => <BiAtom className={className} color={color} />} 
           items={techTraits}
         />
-      </div>
+      </section>
     </div>
   )
 }
@@ -80,7 +80,7 @@ const useStyles = createUseStyles({
     overflowY: "scroll"
   },
   
-  header: {
+  listHeader: {
     display: "flex",
     marginBottom: 10,
   },

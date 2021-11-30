@@ -5,8 +5,10 @@ import authReducer from "./authentication";
 import producerReducer from "./producer";
 import propertyReducer from "./property";
 import licenseReducer from "./license";
+import zoneReducer from "./zone";
 import productReducer from "./product";
 import userReducer from "./user";
+
 import rootSaga from "./rootSaga";
 
 const reducer = combineReducers({
@@ -14,6 +16,7 @@ const reducer = combineReducers({
   producer: producerReducer,
   property: propertyReducer,
   license: licenseReducer,
+  zone: zoneReducer,
   product: productReducer,
   user: userReducer,
 });

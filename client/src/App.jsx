@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { createUseStyles, useTheme } from "react-jss";
 import { Redirect, Route, Switch } from "react-router";
 
@@ -8,39 +9,48 @@ import SideNav from "./components/navigation/SideNav/SideNav";
 import DistributorDirectory from "./components/organisms/DistributorDirectory/DistributorDirectory";
 import LicenseDirectory from "./components/organisms/LicenseDirectory/LicenseDirectory";
 import ProducerDirectory from "./components/organisms/ProducerDirectory/ProducerDirectory";
+import ProducerDetail from "./components/organisms/ProducerDetail/ProducerDetail";
 import ProductDirectory from "./components/organisms/ProductDirectory/ProductDirectory";
 import Dashboard from "./components/organisms/Dashboard/Dashboard";
 import AddDistributor from "./components/organisms/AddDistributor/AddDistributor";
 import Authentication from "./components/organisms/Authentication/Authentication";
-import PropertyDirectory from "./components/organisms/PropertyDirectory/PropertyDirectory";
 import AdminDirectory from "./components/organisms/AdminDirectory/AdminDirectory";
 import AddAdmin from "./components/organisms/AddAdmin/AddAdmin";
 
 function App() {
   const token = useSelector(state => state.auth.token);
+  const loadDataSucceed = useSelector(state => state.auth.loadDataSucceed);
+
+  const [sideNavIsOpen, setSideNavIsOpen] = useState(true);
+
+  const toggleSidebar = () => {
+    setSideNavIsOpen(!sideNavIsOpen);
+  }
 
   const theme = useTheme();
   const classes = useStyles({ theme });
   return (
     <div className={classes.root}>
-      { token 
+      { token && loadDataSucceed
       ? 
       <>
-        <div className={classes.sideNav}>
+        { sideNavIsOpen &&
+          <div className={classes.sideNav}>
           <SideNav />
         </div>
+        }
         
         <div className={classes.mainContent}>
-          <TopBar />
+          <TopBar onSidebarToggle={toggleSidebar} />
           <Switch>
             <Route path="/resumen">
               <Dashboard />
             </Route>
+            <Route path="/productores/u/:id">
+              <ProducerDetail />
+            </Route>
             <Route path="/productores">
               <ProducerDirectory />
-            </Route>
-            <Route path="/predios">
-              <PropertyDirectory />
             </Route>
             <Route path="/licencias">
               <LicenseDirectory />

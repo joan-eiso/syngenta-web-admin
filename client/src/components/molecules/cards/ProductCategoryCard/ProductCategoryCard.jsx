@@ -95,7 +95,7 @@ const useStyles = createUseStyles({
   itemsWrapper: {
     display: "grid",
     grid: {
-      templateColumns: "repeat(6, minmax(10px, 1fr))",
+      templateColumns: "repeat(5, minmax(10px, 1fr))",
       gap: 10,
     },
     padding: 20,

@@ -1,7 +1,9 @@
 import { createUseStyles, useTheme } from "react-jss";
-import { FaUserCircle, FaChartPie, FaUserAlt, FaUsers, FaHouseUser, FaIdBadge, FaLeaf, FaCalendar } from "react-icons/fa";
+import { FaUserCircle, FaChartPie, FaUserAlt, FaUsers, FaIdBadge, FaLeaf, FaCalendar } from "react-icons/fa";
+import { FiDownload } from "react-icons/fi";
 
 import Tab from "./Tab";
+import TabAnchor from "./TabAnchor";
 
 function SideNav() {
   const theme = useTheme();
@@ -20,13 +22,13 @@ function SideNav() {
       <div className={classes.tabs}>
         <Tab to="/resumen" Icon={FaChartPie} label="Resúmen" />
         <Tab to="/productores" Icon={FaUsers} label="Productores" />
-        <Tab to="/predios" Icon={FaHouseUser} label="Predios" />
         <Tab to="/licencias" Icon={FaIdBadge} label="Licencias" />
         <Tab to="/distribuidores" Icon={FaUserAlt} label="Distribuidores" />
         <Tab to="/productos" Icon={FaLeaf} label="Producto" />
         <Tab to="/administradores" Icon={FaCalendar} label="Administradores" />
       </div>
       <div className={classes.bottomContainer}>
+        <TabAnchor href="https://eiso.co/syngenta/reporte_02.php" Icon={FiDownload} label="Descargar Reporte" />
         {/* <Tab to="/ajustes" Icon={FaCog} label="Ajustes" /> */}
         {/* <div className={classes.logoutButton}></div> */}
       </div>

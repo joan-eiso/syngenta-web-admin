@@ -1,2 +1,2 @@
-export const authEndpoint = "http://3.139.32.146:4000/api/auth";
-export const sessionEndpoint = "http://3.139.32.146:4000/api/session";
+export const authEndpoint = "http://www.nklicencias.com:4000/api/auth";
+export const sessionEndpoint = "http://www.nklicencias.com:4000/api/session";

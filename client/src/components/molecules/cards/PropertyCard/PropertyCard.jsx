@@ -1,10 +1,20 @@
 import { createUseStyles, useTheme } from "react-jss";
+import { useSelector } from "react-redux";
 
 import Button from "../../../atoms/Button/Button";
 
-function PropertyCard({ id, name, country, department, city, subregion, hectares, onClick }) {
+function PropertyCard({ id, name, countryId, departmentId, cityId, subregionId, hectares, onClick }) {
+  const countries = useSelector(state => state.zone.countries);
+  const countryName = countries.find((country) => country.id === countryId).name;
+  const departments = useSelector(state => state.zone.departments);
+  const departmentName = departments.find((department) => department.id === departmentId).name;
+  const cities = useSelector(state => state.zone.cities);
+  const cityName = cities.find((city) => city.id === cityId).name;
+  const subregions = useSelector(state => state.zone.subregions);
+  const subregionName = subregions.find((subregion) => subregion.id === subregionId).name;
+
   const handleClick = () => {
-    onClick(id, name, country, department, city, subregion, hectares);
+    onClick(id, name, countryName, departmentName, cityName, subregionName, hectares);
   }
 
   const theme = useTheme();
@@ -13,7 +23,7 @@ function PropertyCard({ id, name, country, department, city, subregion, hectares
     <div className={classes.root}>
       <p className={classes.propertyName}>{name}</p>
       <div className={classes.divider}></div>
-      <p>{department} - {city}</p>
+      <p>{departmentName} - {cityName}</p>
       <div className={classes.bottomRightContainer}>
         <p className={classes.hectares}>{`${hectares} hectarea${hectares === 1 ? "" : "s"}`}</p>
         <Button className={classes.button} label="Ver" onClick={handleClick} />

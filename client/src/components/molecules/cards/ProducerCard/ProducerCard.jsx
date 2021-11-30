@@ -1,8 +1,15 @@
 import { createUseStyles, useTheme } from "react-jss";
+import { useHistory } from "react-router-dom";
 
 import Button from "../../../atoms/Button/Button";
 
 function ProducerCard({ id, name, identification, propertyQuantity }) {
+  const history = useHistory();
+  
+  const handleClick = () => {
+    history.push(`/productores/u/${id}`);
+  }
+  
   const theme = useTheme();
   const classes = useStyles({ theme });
   return (
@@ -12,7 +19,7 @@ function ProducerCard({ id, name, identification, propertyQuantity }) {
       <p>C.C: {identification}</p>
       <div className={classes.bottomRightContainer}>
         <p className={classes.propertyQuantity}>{`${propertyQuantity} predio${propertyQuantity === 1 ? "" : "s"}`}</p>
-        <Button className={classes.button} label="Ver" onClick={null} />
+        <Button className={classes.button} label="Ver" onClick={handleClick} />
       </div>
     </div>
   )

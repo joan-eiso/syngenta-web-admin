@@ -4,7 +4,7 @@ import { requestProducers } from "./request";
 
 import { FETCH_PRODUCERS_REQUESTED, onFetchProducersSuccess, onFetchProducersFailure } from './duck';
 
-export function* fetchProducers() {
+function* fetchProducers() {
   while(true) {
     try {
       const { token, distAuth } = yield take(FETCH_PRODUCERS_REQUESTED);

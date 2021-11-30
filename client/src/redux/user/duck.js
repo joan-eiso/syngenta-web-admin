@@ -15,7 +15,8 @@ const initialState = {
   users: [],
   administrators: [],
   distributors: [],
-  fetchError: undefined,
+  fetchUsersSucceed: undefined,
+  fetchUsersError: undefined,
   createUserSucceed: undefined,
   createUserError: undefined,
   editUserSucceed: undefined,
@@ -91,19 +92,21 @@ const reducer = (state = initialState, action) => {
         ...state, 
         users,
         administrators,
-        distributors
+        distributors,
+        fetchUsersSucceed: true
       }
 
     case FETCH_USERS_FAILURE:
-      let fetchError = action.error;
+      let fetchUsersError = action.error;
       return {
-        ...state, fetchError
+        ...state, fetchUsersError
       }
 
     case RESET_FETCH_USERS:
       return {
         ...state, 
-        fetchError: undefined
+        fetchUsersSucceed: undefined,
+        fetchUsersError: undefined
       }
 
     case CREATE_USER_SUCCESS:
