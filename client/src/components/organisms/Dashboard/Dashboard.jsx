@@ -1,16 +1,24 @@
 import { createUseStyles, useTheme } from "react-jss";
 import { useSelector } from "react-redux";
 
+import { selectClientCountInBothCampaigns, selectClientCountInFormerCampaign } from "../../../redux/producer/duck";
+
 import Metric from "../../molecules/Metric/Metric";
 import LineChart from "../analytics/LineChart/LineChart";
 
 function Dashboard() {
   const producers = useSelector(state => state.producer.producers);
   const hectareCount = useSelector(state => state.property.hectareCount);
+  const soldBags = useSelector(state => state.license.soldBags);
+  const clientCountInBothCampaigns = useSelector(selectClientCountInBothCampaigns);
+  const clientCountInFormerCampaign = useSelector(selectClientCountInFormerCampaign);
+
   const totalProducers = producers.length;
   const clientCount = producers.filter((producer) => producer.isClient).length;
   const prospectCount = totalProducers - clientCount;
   const penPercentage = clientCount * 100 / totalProducers;
+  const retention = clientCountInBothCampaigns * 100 / clientCountInFormerCampaign;
+  const clientParticipation = (soldBags * 100 / hectareCount).toFixed(2);
 
   const theme = useTheme();
   const classes = useStyles({ theme });
@@ -41,7 +49,7 @@ function Dashboard() {
           />            
           <Metric 
             title="% de retención" 
-            value="0%"
+            value={`${retention}%`}
             label="% de clientes que compraron en ambas campañas" 
             backgroundColor={theme.colors.gray.lightest}
             color="#F9B002"
@@ -64,7 +72,7 @@ function Dashboard() {
       </section>
       <section className={classes.middleSection}>
         <div className={classes.tendencyGraphContainer}>
-          <LineChart title="Tendencias del día" />
+          <LineChart />
         </div>
         <Metric 
           title="% de penetración" 
@@ -74,8 +82,8 @@ function Dashboard() {
           color="#002D72"
         />
         <Metric 
-          title="Participación de cliente" 
-          value={`-`} 
+          title="Participación de clientes" 
+          value={`${clientParticipation}%`} 
           label="Cantidad de bolsas en productores en campaña actual / cantidad de hectáreas relevadas totales de maíz" 
           backgroundColor="white"
           color="#002D72"

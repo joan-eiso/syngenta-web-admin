@@ -19,7 +19,7 @@ const useStyles = createUseStyles({
     flex: {
       alignItems: "center",
     },
-    padding: "10px 30px"
+    padding: "15px 30px",
   },
 
   icon: {

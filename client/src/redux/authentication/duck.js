@@ -48,6 +48,10 @@ export const onLoginFailure = (error) => ({
   error,
 });
 
+export const logout = () => ({
+  type: LOGOUT,
+});
+
 export const onLoadDataSuccess = () => ({
   type: LOAD_DATA_SUCCESS,
 });
@@ -121,7 +125,7 @@ const reducer = (state = initialState, action) => {
         loadDataSucceed: true,
       };
       
-      case LOGOUT: 
+    case LOGOUT: 
       return {
         ...initialState
       };

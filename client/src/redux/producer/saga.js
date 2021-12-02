@@ -26,6 +26,7 @@ function* fetchProducers() {
         creationDate: productor.fechaRegistro,
         propertyQuantity: productor.numeroPredios ?? 0,
         isClient: false,
+        isFormerClient: false,
       }));
       yield put(onFetchProducersSuccess(producers));
     } catch (error) {

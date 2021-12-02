@@ -1,4 +1,5 @@
 import { createUseStyles, useTheme } from "react-jss";
+import { useSelector } from "react-redux";
 import {
   LineChart as Chart,
   Line,
@@ -8,45 +9,75 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-} from 'recharts';
+} from "recharts";
 
+import { selectSoldBagsCountPerMonth } from "../../../../redux/license/duck";
+import { selectHectaresCountPerMonth } from "../../../../redux/property/duck";
 
-function LineChart({ title }) {
+function LineChart() {
+  const hectaresCountPerMonth = useSelector(selectHectaresCountPerMonth);
+  const soldBagsCountPerMonth = useSelector(selectSoldBagsCountPerMonth);
+
   const data = [
     {
       name: "Enero",
-      "Hectareas relevadas": 400,
-      "Bolsas vendidas": 240
+      "Hectareas relevadas": hectaresCountPerMonth["Enero"] ?? 0,
+      "Bolsas vendidas": soldBagsCountPerMonth["Enero"] ?? 0
     },
     {
       name: "Febrero",
-      "Hectareas relevadas": 200,
-      "Bolsas vendidas": 150
+      "Hectareas relevadas": hectaresCountPerMonth["Febrero"] ?? 0,
+      "Bolsas vendidas": soldBagsCountPerMonth["Febrero"] ?? 0
     },
     {
       name: "Marzo",
-      "Hectareas relevadas": 300,
-      "Bolsas vendidas": 200
+      "Hectareas relevadas": hectaresCountPerMonth["Marzo"] ?? 0,
+      "Bolsas vendidas": soldBagsCountPerMonth["Marzo"] ?? 0
     },
     {
       name: "Abril",
-      "Hectareas relevadas": 320,
-      "Bolsas vendidas": 100
+      "Hectareas relevadas": hectaresCountPerMonth["Abril"] ?? 0,
+      "Bolsas vendidas": soldBagsCountPerMonth["Abril"] ?? 0
     },
     {
       name: "Mayo",
-      "Hectareas relevadas": 600,
-      "Bolsas vendidas": 403
+      "Hectareas relevadas": hectaresCountPerMonth["Mayo"] ?? 0,
+      "Bolsas vendidas": soldBagsCountPerMonth["Mayo"] ?? 0
     },
     {
       name: "Junio",
-      "Hectareas relevadas": 650,
-      "Bolsas vendidas": 100
+      "Hectareas relevadas": hectaresCountPerMonth["Junio"] ?? 0,
+      "Bolsas vendidas": soldBagsCountPerMonth["Junio"] ?? 0
     },
     {
       name: "Julio",
-      "Hectareas relevadas": 800,
-      "Bolsas vendidas": 210
+      "Hectareas relevadas": hectaresCountPerMonth["Julio"] ?? 0,
+      "Bolsas vendidas": soldBagsCountPerMonth["Julio"] ?? 0
+    },
+    {
+      name: "Agosto",
+      "Hectareas relevadas": hectaresCountPerMonth["Agosto"] ?? 0,
+      "Bolsas vendidas": soldBagsCountPerMonth["Agosto"] ?? 0
+    },
+    {
+      name: "Septiembre",
+      "Hectareas relevadas": hectaresCountPerMonth["Septiembre"] ?? 0,
+      "Bolsas vendidas": soldBagsCountPerMonth["Septiembre"] ?? 0
+    },
+    {
+      name: "Octubre",
+      "Hectareas relevadas": hectaresCountPerMonth["Octubre"] ?? 0,
+      "Bolsas vendidas": soldBagsCountPerMonth["Octubre"] ?? 0
+    },
+    {
+      name: "Noviembre",
+      "Hectareas relevadas": hectaresCountPerMonth["Noviembre"] ?? 0,
+      "Bolsas vendidas": soldBagsCountPerMonth["Noviembre"] ?? 0
+    },
+    {
+      name: "Diciembre",
+      "Hectareas relevadas": hectaresCountPerMonth["Diciembre"] ?? 0,
+      "Bolsas vendidas": soldBagsCountPerMonth["Diciembre"] ?? 0
     },
   ];
 
@@ -54,7 +85,7 @@ function LineChart({ title }) {
   const classes = useStyles({ theme });
   return (
     <div className={classes.root}>
-      <p className={classes.title}>{title}</p>
+      <p className={classes.title}>Gráfica de ventas</p>
       <div className={classes.chartWrapper}>
         <ResponsiveContainer width="100%" height="100%">
           <Chart
@@ -77,7 +108,11 @@ function LineChart({ title }) {
               stroke="#8884d8"
               activeDot={{ r: 8 }}
             />
-            <Line type="monotone" dataKey="Bolsas vendidas" stroke="#82ca9d" />
+            <Line 
+              type="monotone" 
+              dataKey="Bolsas vendidas" 
+              stroke="#82ca9d" 
+            />
           </Chart>
         </ResponsiveContainer>
       </div>

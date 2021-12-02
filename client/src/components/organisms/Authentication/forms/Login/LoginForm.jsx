@@ -9,7 +9,7 @@ import { login, resetPwdRecoveryStatus } from "../../../../../redux/authenticati
 import Button from "../../../../atoms/Button/Button";
 import TextInput from "../../../../atoms/TextInput/TextInput";
 
-import { checkEmptyValueOnPayload, checkValidEmail } from "../../../../../utils/dataValidation";
+import { checkEmptyValueOnPayload, checkValidEmail } from "../../../../../utils/dataValidation.util";
 
 function LoginForm() {
   const dispatch = useDispatch();

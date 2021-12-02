@@ -1,18 +1,31 @@
 import { createUseStyles, useTheme } from "react-jss";
+import { useHistory } from "react-router-dom";
 import { FaUserCircle, FaChartPie, FaUserAlt, FaUsers, FaIdBadge, FaLeaf, FaCalendar } from "react-icons/fa";
-import { FiDownload } from "react-icons/fi";
+import { FiDownload, FiLogOut } from "react-icons/fi";
+
+import { useDispatch } from "react-redux";
+import { logout } from "../../../redux/authentication/duck";
 
 import Tab from "./Tab";
 import TabAnchor from "./TabAnchor";
+import TabButton from "./TabButton";
 
 function SideNav() {
+  const history = useHistory();
+  const dispatch = useDispatch();
+  
+  const handleLogout = () => {
+    dispatch(logout());
+    history.push("/");
+  }
+
   const theme = useTheme();
   const classes = useStyles({ theme });
   return (
     <div className={classes.root}>
       <div className={classes.topContainer}>
         <div className={classes.logoContainer}>
-          <img  className={classes.logo} src={`${process.env.PUBLIC_URL}/resources/images/nk-cerca-light.png`} alt="nk cerca logo" />
+          <img  className={classes.logo} src={`${process.env.PUBLIC_URL}/resources/images/logo124.png`} alt="nk cerca logo" />
         </div>
         <div className={classes.profileContainer}>
           <FaUserCircle className={classes.profilePic} color="white" size={28} />
@@ -29,8 +42,8 @@ function SideNav() {
       </div>
       <div className={classes.bottomContainer}>
         <TabAnchor href="https://eiso.co/syngenta/reporte_02.php" Icon={FiDownload} label="Descargar Reporte" />
-        {/* <Tab to="/ajustes" Icon={FaCog} label="Ajustes" /> */}
-        {/* <div className={classes.logoutButton}></div> */}
+        <TabButton Icon={FiLogOut} label="Salir" onClick={handleLogout} />
+        <div className={classes.logoutButton}></div>
       </div>
     </div>
   );
@@ -53,18 +66,19 @@ const useStyles = createUseStyles({
     display: "flex",
     justifyContent: "center",
     margin: "auto",
-    padding: "20px 0px"
+    padding: "30px 0px 20px"
   },
 
   logo: {
-    width: "60%",
+    marginLeft: -20,
   },
 
   profileContainer: {
     display: "flex",
     flexFlow: "row nowrap",
     alignItems: "center",
-    padding: "30px 20px",
+    marginBottom: 10,
+    padding: "20px 20px",
   },
 
   profilePic: {
@@ -78,24 +92,20 @@ const useStyles = createUseStyles({
   },
 
   topContainer: {
-    flex: 2,
+    flex: 1,
   },
 
   tabs: {
-    flex: 5,
+    flex: 4,
     display: "flex",
     flexFlow: "column nowrap",
-    justifyContent: "space-evenly",
+    justifyContent: "center",
   },
   
   bottomContainer: {
     flex: 2,
     display: "flex",
-    alignItems: "flex-end",
-    paddingBottom: 20
-  },
-
-  logoutButton: {
-    
+    flexFlow: "column nowrap",    
+    justifyContent: "flex-end",
   }
 });

@@ -9,7 +9,7 @@ import { createUser, resetCreateUser } from "../../../redux/user/duck";
 import Button from "../../atoms/Button/Button";
 import TextInput from "../../atoms/TextInput/TextInput";
 
-import { checkEmptyValueOnPayload, checkValidEmail } from "../../../utils/dataValidation";
+import { checkEmptyValueOnPayload, checkValidEmail } from "../../../utils/dataValidation.util";
 
 function CreateAdminForm() {
   const dispatch = useDispatch();

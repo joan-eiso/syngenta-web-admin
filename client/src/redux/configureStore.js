@@ -8,6 +8,7 @@ import licenseReducer from "./license";
 import zoneReducer from "./zone";
 import productReducer from "./product";
 import userReducer from "./user";
+import campaignReducer from "./campaign";
 
 import rootSaga from "./rootSaga";
 
@@ -19,6 +20,7 @@ const reducer = combineReducers({
   zone: zoneReducer,
   product: productReducer,
   user: userReducer,
+  campaign: campaignReducer
 });
 
 const sagaMiddleware = createSagaMiddleware();

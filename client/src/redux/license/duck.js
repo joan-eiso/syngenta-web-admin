@@ -8,6 +8,7 @@ export const DOWNLOAD_LICENSE_RESET = "/license/DOWNLOAD_LICENSE/RESET";
 
 const initialState = {
   licenses: [],
+  soldBags: 0,
   fetchLicensesSucceed: undefined,
   fetchLicensesError: undefined,
   fileToDownload: undefined,
@@ -20,9 +21,10 @@ export const fetchLicenses = (token, distAuth) => ({
   distAuth
 });
 
-export const onFetchLicensesSuccess = (licenses) => ({
+export const onFetchLicensesSuccess = (licenses, soldBags) => ({
   type: FETCH_LICENSES_SUCCESS,
-  licenses
+  licenses,
+  soldBags
 });
 
 export const onFetchLicensesFailure = (error) => ({
@@ -57,9 +59,11 @@ const reducer = (state = initialState, action) => {
   switch(type) {
     case FETCH_LICENSES_SUCCESS:
       let licenses = action.licenses;
+      let soldBags = action.soldBags;
       return {
         ...state, 
         licenses,
+        soldBags,
         fetchLicensesSucceed: true
       }
 
@@ -94,3 +98,13 @@ const reducer = (state = initialState, action) => {
 }
 
 export default reducer;
+
+export const selectSoldBagsCountPerMonth = (state) => {
+  let soldBagsPerMonth = {}
+  state.license.licenses.forEach((license) => {
+    if(!Number.isInteger(soldBagsPerMonth[license.month])) soldBagsPerMonth[license.month] = 0;
+    soldBagsPerMonth[license.month] += license.bags;
+    
+  });
+  return soldBagsPerMonth;
+}

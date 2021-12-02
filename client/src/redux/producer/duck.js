@@ -25,9 +25,10 @@ export const onFetchProducersFailure = (error) => ({
   error
 });
 
-export const setProducerAsClient = (producerId) => ({
+export const setProducerAsClient = (producerId, { isFormerClient = undefined }) => ({
   type: SET_PRODUCER_AS_CLIENT,
-  producerId
+  producerId,
+  isFormerClient
 });
 
 const reducer = (state = initialState, action) => {
@@ -49,10 +50,12 @@ const reducer = (state = initialState, action) => {
 
     case SET_PRODUCER_AS_CLIENT:
       let newClientId = action.producerId;
+      let isFormerClient = action.isFormerClient;
       let clientIndex = state.producers.findIndex((producer) => producer.id === newClientId);
 
       let updatedProducers = state.producers.map((producer, index) => {
-        if(index === clientIndex) return { ...producer, isClient: true }
+        if(index === clientIndex && !isFormerClient) return { ...producer, isClient: true }
+        else if(index === clientIndex && isFormerClient) return { ...producer, isFormerClient: true }
         return producer;
       })
 
@@ -66,3 +69,17 @@ const reducer = (state = initialState, action) => {
 }
 
 export default reducer;
+
+export const selectClientCountInFormerCampaign = (state) => {
+  return state.producer.producers.reduce((acc, producer) => {
+    if(producer.isFormerClient) return acc + 1;
+    return acc;
+  }, 0);
+}
+
+export const selectClientCountInBothCampaigns = (state) => {
+  return state.producer.producers.reduce((acc, producer) => {
+    if(producer.isClient && producer.isFormerClient) return acc + 1;
+    return acc;
+  }, 0);
+}

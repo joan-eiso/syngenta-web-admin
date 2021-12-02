@@ -27,9 +27,10 @@ export const onFetchPropertiesFailure = (error) => ({
   error
 });
 
-export const notifyClient = (propertyId) => ({
+export const notifyClient = (propertyId, licenseYear) => ({
   type: NOTIFY_CLIENT,
-  propertyId
+  propertyId,
+  licenseYear
 });
 
 const reducer = (state = initialState, action) => {
@@ -57,3 +58,12 @@ const reducer = (state = initialState, action) => {
 }
 
 export default reducer;
+
+export const selectHectaresCountPerMonth = (state) => {
+  let hectaresPerMonth = {}
+  state.property.properties.forEach((property) => {
+    if(!Number.isInteger(hectaresPerMonth[property.month])) hectaresPerMonth[property.month] = 0;
+    hectaresPerMonth[property.month] += property.hectares;
+  });
+  return hectaresPerMonth;
+}
