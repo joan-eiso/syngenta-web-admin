@@ -43,7 +43,7 @@ function LicenseDirectory() {
     if(fileToDownload) {
       const blob = dataURIToBlob(fileToDownload);
       const url = URL.createObjectURL(blob);
-      window.open(url, '_blank');
+      window.open(url, "_blank");
       dispatch(onDownloadLicenseReset());
     }
   }, [dispatch, fileToDownload]);

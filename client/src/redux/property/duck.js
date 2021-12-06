@@ -59,11 +59,18 @@ const reducer = (state = initialState, action) => {
 
 export default reducer;
 
-export const selectHectaresCountPerMonth = (state) => {
+export const selectHectaresCountPerMonthInCurrentCampaign = (state) => {
+  const currentCampaign = state.campaign.currentCampaign;
   let hectaresPerMonth = {}
   state.property.properties.forEach((property) => {
-    if(!Number.isInteger(hectaresPerMonth[property.month])) hectaresPerMonth[property.month] = 0;
-    hectaresPerMonth[property.month] += property.hectares;
+    if(property.year === currentCampaign) {
+      if(!Number.isInteger(hectaresPerMonth[property.month])) hectaresPerMonth[property.month] = 0;
+      hectaresPerMonth[property.month] += property.hectares;
+    }
   });
   return hectaresPerMonth;
+}
+
+export const selectPropertyById = (state, id) => {
+  return state.property.properties.find((property) => property.id === id);
 }

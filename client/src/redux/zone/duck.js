@@ -155,3 +155,19 @@ const reducer = (state = initialState, action) => {
 }
 
 export default reducer;
+
+export const selectCountryById = (state, countryId) => {
+  return state.zone.countries.find((country) => country.id === countryId);
+}
+
+export const selectDepartmentById = (state, departmentId) => {
+  return state.zone.departments.find((department) => department.id === departmentId);
+}
+
+export const selectCityById = (state, cityId) => {
+  return state.zone.cities.find((city) => city.id === cityId);
+}
+
+export const selectSubregionById = (state, subregionId) => {
+  return state.zone.subregions.find((subregion) => subregion.id === subregionId);
+}

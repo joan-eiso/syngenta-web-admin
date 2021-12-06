@@ -3,20 +3,31 @@ import { useHistory } from "react-router-dom";
 import { FaUserCircle, FaChartPie, FaUserAlt, FaUsers, FaIdBadge, FaLeaf, FaCalendar } from "react-icons/fa";
 import { FiDownload, FiLogOut } from "react-icons/fi";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../../redux/authentication/duck";
 
 import Tab from "./Tab";
-import TabAnchor from "./TabAnchor";
 import TabButton from "./TabButton";
 
+import { dataURIToBlob, downloadGeneralReport } from "../../../utils/reports.util";
+
 function SideNav() {
-  const history = useHistory();
   const dispatch = useDispatch();
+  const token = useSelector(state => state.auth.token);
+  const distAuth = useSelector(state => state.auth.distAuth);
+  const history = useHistory();
   
   const handleLogout = () => {
     dispatch(logout());
     history.push("/");
+  }
+
+  const handleDownloadGeneralReport = async () => {
+    const { data: { response: dataURI } } = await downloadGeneralReport(distAuth, token);
+    const blob = dataURIToBlob(dataURI);
+    const url = URL.createObjectURL(blob);
+    window.location.assign(url);
+    URL.revokeObjectURL(url);
   }
 
   const theme = useTheme();
@@ -41,7 +52,7 @@ function SideNav() {
         <Tab to="/administradores" Icon={FaCalendar} label="Administradores" />
       </div>
       <div className={classes.bottomContainer}>
-        <TabAnchor href="https://eiso.co/syngenta/reporte_02.php" Icon={FiDownload} label="Descargar Reporte" />
+        <TabButton Icon={FiDownload} label="Descargar Reporte" onClick={handleDownloadGeneralReport} />
         <TabButton Icon={FiLogOut} label="Salir" onClick={handleLogout} />
         <div className={classes.logoutButton}></div>
       </div>

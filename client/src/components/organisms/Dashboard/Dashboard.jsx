@@ -2,11 +2,15 @@ import { createUseStyles, useTheme } from "react-jss";
 import { useSelector } from "react-redux";
 
 import { selectClientCountInBothCampaigns, selectClientCountInFormerCampaign } from "../../../redux/producer/duck";
+import { dataURIToBlob, downloadICAReport } from "../../../utils/reports.util";
 
+import Button from "../../atoms/Button/Button";
 import Metric from "../../molecules/Metric/Metric";
 import LineChart from "../analytics/LineChart/LineChart";
 
 function Dashboard() {
+  const token = useSelector(state => state.auth.token);
+  const distAuth = useSelector(state => state.auth.distAuth);
   const producers = useSelector(state => state.producer.producers);
   const hectareCount = useSelector(state => state.property.hectareCount);
   const soldBags = useSelector(state => state.license.soldBags);
@@ -19,6 +23,14 @@ function Dashboard() {
   const penPercentage = clientCount * 100 / totalProducers;
   const retention = clientCountInBothCampaigns * 100 / clientCountInFormerCampaign;
   const clientParticipation = (soldBags * 100 / hectareCount).toFixed(2);
+
+  const handleDownloadICAReport = async () => {
+    const { data: { response: dataURI } } = await downloadICAReport(distAuth, token);
+    const blob = dataURIToBlob(dataURI);
+    const url = URL.createObjectURL(blob);
+    window.location.assign(url);
+    URL.revokeObjectURL(url);
+  }
 
   const theme = useTheme();
   const classes = useStyles({ theme });
@@ -90,7 +102,8 @@ function Dashboard() {
       />
       </section>
       <section className={classes.actions}>
-        <a href="https://eiso.co/syngenta/reporte_01.php" target="_blank" rel="noreferrer">DESCARGAR INFORMACIÓN</a>
+        {/* <a href="https://eiso.co/syngenta/reporte_01.php" target="_blank" rel="noreferrer">DESCARGAR INFORMACIÓN</a> */}
+        <Button label="Descargar Reporte ICA" onClick={handleDownloadICAReport} />
       </section>
     </div>
   )

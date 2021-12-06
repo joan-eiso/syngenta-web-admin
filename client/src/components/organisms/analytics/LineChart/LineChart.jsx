@@ -11,12 +11,13 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-import { selectSoldBagsCountPerMonth } from "../../../../redux/license/duck";
-import { selectHectaresCountPerMonth } from "../../../../redux/property/duck";
+import { selectHectaresCountPerMonthInCurrentCampaign } from "../../../../redux/property/duck";
+import { selectSoldBagsCountPerMonthInCurrentCampaign } from "../../../../redux/license/duck";
 
 function LineChart() {
-  const hectaresCountPerMonth = useSelector(selectHectaresCountPerMonth);
-  const soldBagsCountPerMonth = useSelector(selectSoldBagsCountPerMonth);
+  const currentCampaign = useSelector(state => state.campaign.currentCampaign);
+  const hectaresCountPerMonth = useSelector(selectHectaresCountPerMonthInCurrentCampaign);
+  const soldBagsCountPerMonth = useSelector(selectSoldBagsCountPerMonthInCurrentCampaign);
 
   const data = [
     {
@@ -85,7 +86,7 @@ function LineChart() {
   const classes = useStyles({ theme });
   return (
     <div className={classes.root}>
-      <p className={classes.title}>Gráfica de ventas</p>
+      <p className={classes.title}>Gráfica de resultados del {currentCampaign}</p>
       <div className={classes.chartWrapper}>
         <ResponsiveContainer width="100%" height="100%">
           <Chart

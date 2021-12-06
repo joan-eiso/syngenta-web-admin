@@ -1,7 +1,17 @@
 import { createUseStyles, useTheme } from "react-jss";
+import { useSelector } from "react-redux";
 import { FiX } from "react-icons/fi";
 
-function PropertyDetail({ data: { id, name, country, department, city, subregion, hectares }, handleClose}) {
+import { selectPropertyById } from "../../../../redux/property/duck";
+import { selectCityById, selectCountryById, selectDepartmentById, selectSubregionById } from "../../../../redux/zone/duck";
+
+function PropertyDetail({ id, handleClose}) {
+  const { name, countryId, departmentId, cityId, subregionId, lat, long, hectares } = useSelector(state => selectPropertyById(state, id));
+  const { name: countryName } = useSelector(state => selectCountryById(state, countryId));
+  const { name: departmentName } = useSelector(state => selectDepartmentById(state, departmentId));
+  const { name: cityName } = useSelector(state => selectCityById(state, cityId));
+  const { name: subregionName } = useSelector(state => selectSubregionById(state, subregionId));
+
   const theme = useTheme();
   const classes = useStyles({ theme });
   return (
@@ -17,19 +27,23 @@ function PropertyDetail({ data: { id, name, country, department, city, subregion
       </div>
       <div className={classes.item}>
         <p className={classes.itemLabel}>País</p>
-        <p className={classes.itemValue}>{country}</p>
+        <p className={classes.itemValue}>{countryName}</p>
       </div>
       <div className={classes.item}>
         <p className={classes.itemLabel}>Departamento</p>
-        <p className={classes.itemValue}>{department}</p>
+        <p className={classes.itemValue}>{departmentName}</p>
       </div>
       <div className={classes.item}>
         <p className={classes.itemLabel}>Ciudad</p>
-        <p className={classes.itemValue}>{city}</p>
+        <p className={classes.itemValue}>{cityName}</p>
       </div>
       <div className={classes.item}>
         <p className={classes.itemLabel}>Subregión</p>
-        <p className={classes.itemValue}>{subregion}</p>
+        <p className={classes.itemValue}>{subregionName}</p>
+      </div>
+      <div className={classes.item}>
+        <p className={classes.itemLabel}>Coordenadas</p>
+        <p className={classes.itemValue}>{lat}, {long}</p>
       </div>
       <div className={classes.item}>
         <p className={classes.itemLabel}>Hectareas</p>

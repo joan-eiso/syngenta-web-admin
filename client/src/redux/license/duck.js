@@ -99,12 +99,14 @@ const reducer = (state = initialState, action) => {
 
 export default reducer;
 
-export const selectSoldBagsCountPerMonth = (state) => {
+export const selectSoldBagsCountPerMonthInCurrentCampaign = (state) => {
+  const currentCampaign = state.campaign.currentCampaign;
   let soldBagsPerMonth = {}
   state.license.licenses.forEach((license) => {
-    if(!Number.isInteger(soldBagsPerMonth[license.month])) soldBagsPerMonth[license.month] = 0;
-    soldBagsPerMonth[license.month] += license.bags;
-    
+    if(license.year === currentCampaign) {
+      if(!Number.isInteger(soldBagsPerMonth[license.month])) soldBagsPerMonth[license.month] = 0;
+      soldBagsPerMonth[license.month] += license.bags;
+    }
   });
   return soldBagsPerMonth;
 }

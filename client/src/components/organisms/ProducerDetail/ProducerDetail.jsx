@@ -22,7 +22,7 @@ function ProducerDetail() {
   const [isSearching, setIsSearching] = useState(false);
   const [searchResults, setSearchResults] = useState(undefined);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [selectedProperty, setSelectedProperty] = useState(undefined);
+  const [selectedPropertyId, setSelectedPropertyId] = useState(undefined);
 
   const handleSearch = (query) => {
     setSearchResults(searchByQuery(query, producerProperties));
@@ -32,17 +32,9 @@ function ProducerDetail() {
     setModalIsOpen(false);
   }
 
-  const handleViewProperty = (id, name, country, department, city, subregion, hectares) => {
+  const handleViewProperty = (id) => {
     setModalIsOpen(true);
-    setSelectedProperty({
-      id, 
-      name, 
-      country,
-      department, 
-      city, 
-      subregion, 
-      hectares
-    });
+    setSelectedPropertyId(id);
   }
   
   const theme = useTheme();
@@ -55,7 +47,7 @@ function ProducerDetail() {
         >
         {modalIsOpen && 
           <Modal handleClose={closeModal}>
-            <PropertyDetail data={selectedProperty} handleClose={closeModal} />
+            <PropertyDetail id={selectedPropertyId} handleClose={closeModal} />
           </Modal>
         }
       </AnimatePresence>

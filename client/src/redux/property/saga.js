@@ -22,7 +22,9 @@ function* fetchProperties() {
       let properties = predios.map((predio) => {
         let date = predio.fechaRegistro.split(" ")[0];
         date = changeDateFormat(date);
-        let month = new Date(date).getMonth();
+        date = new Date(date);
+        let year = date.getFullYear();
+        let month = date.getMonth();
         let parsedMonth = parseMonth(month);
         let parsedHectares = parseInt(predio.hectareas);
         hectareCount += parsedHectares;
@@ -30,6 +32,7 @@ function* fetchProperties() {
           id: predio.IDPredio,
           name: predio.vereda,
           date: date,
+          year: year,
           month: parsedMonth,
           producerId: predio.IDProductor,
           countryId: predio.IDPais,

@@ -1,27 +1,19 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { createUseStyles, useTheme } from "react-jss";
 import { AnimatePresence } from "framer-motion";
 import { RiSeedlingLine } from "react-icons/ri";
 import { BiChip, BiAtom } from "react-icons/bi";
 
-import { useDispatch, useSelector } from "react-redux";
-import { fetchCrops } from "../../../redux/product/duck";
+import { useSelector } from "react-redux";
 
 import CreateForm from "./CreateForm";
 import ProductCategoryCard from "../../molecules/cards/ProductCategoryCard/ProductCategoryCard";
 import Modal from "../Modal/Modal";
 
 function ProductDirectory() {
-  const dispatch = useDispatch();
-  const token = useSelector(state => state.auth.token);
-  const distAuth = useSelector(state => state.auth.distAuth);
   const crops = useSelector(state => state.product.crops);
   const technologies = useSelector(state => state.product.technologies);
   const techTraits = useSelector(state => state.product.techTraits);
-
-  useEffect(() => {
-    dispatch(fetchCrops(token, distAuth));
-  }, [dispatch, token, distAuth]);
   
   const [modalIsOpen, setModalIsOpen] = useState(false);
 

@@ -1,20 +1,18 @@
 import { createUseStyles, useTheme } from "react-jss";
+
 import { useSelector } from "react-redux";
+import { selectPropertyById } from "../../../../redux/property/duck";
+import { selectCityById, selectDepartmentById } from "../../../../redux/zone/duck";
 
 import Button from "../../../atoms/Button/Button";
 
-function PropertyCard({ id, name, countryId, departmentId, cityId, subregionId, hectares, onClick }) {
-  const countries = useSelector(state => state.zone.countries);
-  const countryName = countries.find((country) => country.id === countryId).name;
-  const departments = useSelector(state => state.zone.departments);
-  const departmentName = departments.find((department) => department.id === departmentId).name;
-  const cities = useSelector(state => state.zone.cities);
-  const cityName = cities.find((city) => city.id === cityId).name;
-  const subregions = useSelector(state => state.zone.subregions);
-  const subregionName = subregions.find((subregion) => subregion.id === subregionId).name;
+function PropertyCard({ id, onClick }) {
+  const { name, departmentId, cityId, hectares } = useSelector(state => selectPropertyById(state, id));
+  const { name: departmentName } = useSelector(state => selectDepartmentById(state, departmentId));
+  const { name: cityName } = useSelector(state => selectCityById(state, cityId));
 
   const handleClick = () => {
-    onClick(id, name, countryName, departmentName, cityName, subregionName, hectares);
+    onClick(id);
   }
 
   const theme = useTheme();
