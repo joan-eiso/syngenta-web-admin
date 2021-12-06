@@ -3,7 +3,7 @@ import { encodePayload } from '../../utils/jwt.util';
 import { requestDownloadLicense, requestFetchHybridsByLicenseId, requestFetchLicenses } from "./request";
 
 import { FETCH_LICENSES_REQUESTED, onFetchLicensesSuccess, onFetchLicensesFailure, DOWNLOAD_LICENSE_REQUESTED, onDownloadLicenseSuccess, onDownloadLicenseFailure } from './duck';
-import { notifyClient } from "../property/duck";
+import { notifyClient, selectPropertyById } from "../property/duck";
 import { changeDateFormat, parseMonth } from "../../utils/date.util";
 
 function* fetchLicenses() {
@@ -17,6 +17,7 @@ function* fetchLicenses() {
       let encodedPayload = encodePayload(payload, token);
       let { data: { licencias, statusCode, message: error } } = yield call(requestFetchLicenses, encodedPayload);
       
+
       let licenses = licencias.map((licencia) => {
         let date = changeDateFormat(licencia.fechaLicencia);
         let year = new Date(date).getFullYear();
@@ -34,10 +35,12 @@ function* fetchLicenses() {
           bags: undefined,
         }
       });
-
+      
       let soldBags = 0;
       for(let license of licenses) {
         const { hybrids, bagCount } = yield call(fetchHybridsByLicenseId, token, distAuth, license.id);
+        let propertyData = yield select((state) => selectPropertyById(state, license.propertyId));
+        license.propertyName = propertyData.name;
         license.hybrids = hybrids;
         license.bags = bagCount;
         soldBags += bagCount;

@@ -56,7 +56,7 @@ function LicenseDirectory() {
         <h1 className={classes.title}>Licencias</h1>
         <div className={classes.actions}>
           {/* <FilterButton className={classes.filterButton} /> */}
-          <SearchBar placeholder="Buscar por ID de licencia" setIsSearching={setIsSearching} handleSearch={handleSearch} />
+          <SearchBar placeholder="Buscar por nombre del predio o ID de licencia" setIsSearching={setIsSearching} handleSearch={handleSearch} />
         </div>
       </div>
       <section className={classes.licenseList}>
@@ -64,8 +64,6 @@ function LicenseDirectory() {
           <LicenseCard 
             key={license.id}
             id={license.id}  
-            propertyId={license.propertyId}
-            date={license.date}
             handleDownload={handleDownload}
           />
         ))}

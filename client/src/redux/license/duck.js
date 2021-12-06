@@ -99,6 +99,10 @@ const reducer = (state = initialState, action) => {
 
 export default reducer;
 
+export const selectLicenseById = (state, id) => {
+  return state.license.licenses.find((license) => license.id === id);
+}
+
 export const selectSoldBagsCountPerMonthInCurrentCampaign = (state) => {
   const currentCampaign = state.campaign.currentCampaign;
   let soldBagsPerMonth = {}

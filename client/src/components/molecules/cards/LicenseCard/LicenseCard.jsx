@@ -1,13 +1,17 @@
 import { createUseStyles, useTheme } from "react-jss";
 
 import { useSelector } from "react-redux";
+import { selectLicenseById } from "../../../../redux/license/duck";
 
 import Button from "../../../atoms/Button/Button";
 
-function LicenseCard({ id, propertyId, date, handleDownload }) {
-  const properties = useSelector(state => state.property.properties);
-
-  const { name: propertyName } = properties.find(property => property.id === propertyId);
+function LicenseCard({ id, handleDownload }) {
+  const data = useSelector((state) => selectLicenseById(state, id));
+  let date = new Date(data.date);
+  let day = date.getDate().toString().length > 1 ? date.getDate() : "0" + date.getDate();
+  let month = (date.getMonth() + 1).toString().length > 1 ? date.getMonth() + 1 : "0" + (date.getDate() + 1);
+  let year = date.getFullYear();
+  date = `${day}/${month}/${year}`
 
   const handleClick = () => {
     handleDownload(id);
@@ -17,9 +21,9 @@ function LicenseCard({ id, propertyId, date, handleDownload }) {
   const classes = useStyles({ theme });
   return (
     <div className={classes.root}>
-      <p className={classes.licenseNumber}>Licencia #{id}</p>
+      <p className={classes.licenseNumber}>Licencia #{data.id}</p>
       <div className={classes.divider}></div>
-      <p>{propertyName}</p>
+      <p>{data.propertyName}</p>
       <div className={classes.bottomRightContainer}>
         <p className={classes.location}>Fecha: {date}</p>
         <Button className={classes.button} label="Ver" onClick={handleClick} />

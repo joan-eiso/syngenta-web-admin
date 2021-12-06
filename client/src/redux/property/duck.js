@@ -59,6 +59,10 @@ const reducer = (state = initialState, action) => {
 
 export default reducer;
 
+export const selectPropertyById = (state, id) => {
+  return state.property.properties.find((property) => property.id === id);
+}
+
 export const selectHectaresCountPerMonthInCurrentCampaign = (state) => {
   const currentCampaign = state.campaign.currentCampaign;
   let hectaresPerMonth = {}
@@ -69,8 +73,4 @@ export const selectHectaresCountPerMonthInCurrentCampaign = (state) => {
     }
   });
   return hectaresPerMonth;
-}
-
-export const selectPropertyById = (state, id) => {
-  return state.property.properties.find((property) => property.id === id);
 }
