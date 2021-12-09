@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { createUseStyles, useTheme } from "react-jss";
 import { AnimatePresence } from "framer-motion";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { resetFilters } from "../../../redux/filter/duck";
 
-// import FilterButton from "../../atoms/FilterButton/FilterButton";
+import FilterList from "./FilterList";
+import FilterButton from "../../atoms/FilterButton/FilterButton";
 import PropertyCard from "../../molecules/cards/PropertyCard/PropertyCard";
 import SearchBar from "../../molecules/SearchBar/SearchBar";
 import Modal from "../Modal/Modal";
@@ -15,25 +17,42 @@ import { searchByQuery } from "../../../utils/search.util";
 import ProducerInfo from "../../molecules/ProducerInfo/ProducerInfo";
 
 function ProducerDetail() {
+  const dispatch = useDispatch();
   const { id: producerId } = useParams();
   const properties = useSelector(state => state.property.properties);
   const producerProperties = properties.filter(property => property.producerId === parseInt(producerId));
+  const propertySortingRule = useSelector(state => state.filter.propertySortingRule);
+  const propertyFilters = useSelector(state => state.filter.propertyFilters);
+  const sortedProperties = useSelector(state => state.filter.properties);
 
   const [isSearching, setIsSearching] = useState(false);
   const [searchResults, setSearchResults] = useState(undefined);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [propertyModalIsOpen, setPropertyModalIsOpen] = useState(false);
+  const [filterModalIsOpen, setFilterModalIsOpen] = useState(false);
   const [selectedPropertyId, setSelectedPropertyId] = useState(undefined);
+
+  useEffect(() => {
+    dispatch(resetFilters());
+  }, [dispatch]);
 
   const handleSearch = (query) => {
     setSearchResults(searchByQuery(query, producerProperties));
   }
 
-  const closeModal = () => {
-    setModalIsOpen(false);
+  const openFilterModal = () => {
+    setFilterModalIsOpen(true);
+  }
+
+  const closeFilterModal = () => {
+    setFilterModalIsOpen(false);
+  }
+
+  const closePropertyModal = () => {
+    setPropertyModalIsOpen(false);
   }
 
   const handleViewProperty = (id) => {
-    setModalIsOpen(true);
+    setPropertyModalIsOpen(true);
     setSelectedPropertyId(id);
   }
   
@@ -44,10 +63,15 @@ function ProducerDetail() {
       <AnimatePresence
         initial="none"
         exitBeforeEnter={true}
-        >
-        {modalIsOpen && 
-          <Modal handleClose={closeModal}>
-            <PropertyDetail id={selectedPropertyId} handleClose={closeModal} />
+      >
+        {filterModalIsOpen && 
+          <Modal handleClose={closeFilterModal}>
+            <FilterList producerProperties={producerProperties} handleClose={closeFilterModal} />
+          </Modal>
+        }
+        {propertyModalIsOpen && 
+          <Modal handleClose={closePropertyModal}>
+            <PropertyDetail id={selectedPropertyId} handleClose={closePropertyModal} />
           </Modal>
         }
       </AnimatePresence>
@@ -55,7 +79,7 @@ function ProducerDetail() {
       <header className={classes.listHeader}>
         <h1 className={classes.title}>Predios</h1>
         <div className={classes.actions}>
-          {/* <FilterButton className={classes.filterButton} /> */}
+          <FilterButton className={classes.filterButton} onClick={openFilterModal} />
           <SearchBar placeholder="Buscar por nombre del predio" setIsSearching={setIsSearching} handleSearch={handleSearch} />
         </div>
       </header>
@@ -65,7 +89,7 @@ function ProducerDetail() {
       </section>
 
       <section className={classes.propertyList}>
-        {Array.from(isSearching ? searchResults : producerProperties).map(property => (
+        {Array.from(isSearching ? searchResults : (propertySortingRule || Object.keys(propertyFilters).length > 0 ? sortedProperties : producerProperties)).map(property => (
           <PropertyCard 
             key={property.id}  
             id={property.id}  

@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { createUseStyles, useTheme } from "react-jss";
 import { AnimatePresence } from "framer-motion";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { resetFilters } from "../../../redux/filter/duck";
 
 import EditForm from "./EditForm";
+import FilterList from "./FilterList";
 import Button from "../../atoms/Button/Button";
-// import FilterButton from "../../atoms/FilterButton/FilterButton";
+import FilterButton from "../../atoms/FilterButton/FilterButton";
 import DistributorCard from "../../molecules/cards/DistributorCard/DistributorCard";
 import SearchBar from "../../molecules/SearchBar/SearchBar";
 import Modal from "../Modal/Modal";
@@ -15,23 +17,40 @@ import Modal from "../Modal/Modal";
 import { searchByQuery } from "../../../utils/search.util";
 
 function DistributorDirectory() {
+  const dispatch = useDispatch();
+  const distributorSortingRule = useSelector(state => state.filter.distributorSortingRule);
+  const distributorFilters = useSelector(state => state.filter.distributorFilters);
+  const sortedDistributors = useSelector(state => state.filter.distributors);
   const distributors = useSelector(state => state.user.distributors);
-
+  
   const [isSearching, setIsSearching] = useState(false);
   const [searchResults, setSearchResults] = useState(undefined);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [editModalIsOpen, setEditModalIsOpen] = useState(false);
+  const [filterModalIsOpen, setFilterModalIsOpen] = useState(false);
   const [selectedDist, setSelectedDist] = useState(undefined);
+
+  useEffect(() => {
+    dispatch(resetFilters());
+  }, [dispatch]);
 
   const handleSearch = (query) => {
     setSearchResults(searchByQuery(query, distributors));
   }
+  
+  const closeEditModal = () => {
+    setEditModalIsOpen(false);
+  }
 
-  const closeModal = () => {
-    setModalIsOpen(false);
+  const openFilterModal = () => {
+    setFilterModalIsOpen(true);
+  }
+
+  const closeFilterModal = () => {
+    setFilterModalIsOpen(false);
   }
 
   const handleEditDistributor = (distributor) => {
-    setModalIsOpen(true);
+    setEditModalIsOpen(true);
     setSelectedDist({
       id: distributor.id, 
       name: distributor.name,
@@ -59,23 +78,28 @@ function DistributorDirectory() {
       <AnimatePresence
         initial="none"
         exitBeforeEnter={true}
-        >
-        {modalIsOpen && 
-          <Modal handleClose={closeModal}>
-            <EditForm distributor={selectedDist} handleClose={closeModal} />
+      >
+        {filterModalIsOpen && 
+          <Modal handleClose={closeFilterModal}>
+            <FilterList handleClose={closeFilterModal} />
+          </Modal>
+        }
+        {editModalIsOpen && 
+          <Modal handleClose={closeEditModal}>
+            <EditForm distributor={selectedDist} handleClose={closeEditModal} />
           </Modal>
         }
       </AnimatePresence>
       <div className={classes.listHeader}>
         <h1 className={classes.title}>Distribuidores</h1>
         <div className={classes.actions}>
-          {/* <FilterButton className={classes.filterButton} /> */}
+          <FilterButton className={classes.filterButton} onClick={openFilterModal} />
           <SearchBar placeholder="Buscar por nombre del distribuidor" setIsSearching={setIsSearching} handleSearch={handleSearch} />
           <Button className={classes.createButton} label="Crear" onClick={handleCreate} />      
         </div>
       </div>
       <section className={classes.distributorList}>
-        {Array.from(isSearching ? searchResults : distributors).map(distributor => (
+        {Array.from(isSearching ? searchResults : (distributorSortingRule || Object.keys(distributorFilters).length > 0 ? sortedDistributors : distributors)).map(distributor => (
           <DistributorCard 
             key={distributor.id}  
             id={distributor.id}  

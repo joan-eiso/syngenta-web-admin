@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { createUseStyles, useTheme } from "react-jss";
 import { AnimatePresence } from "framer-motion";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { resetFilters } from "../../../redux/filter/duck";
 
 import EditForm from "./EditForm";
+import FilterList from "./FilterList";
 import Button from "../../atoms/Button/Button";
-// import FilterButton from "../../atoms/FilterButton/FilterButton";
+import FilterButton from "../../atoms/FilterButton/FilterButton";
 import UserCard from "../../molecules/cards/AdminCard/AdminCard";
 import SearchBar from "../../molecules/SearchBar/SearchBar";
 import Modal from "../Modal/Modal";
@@ -15,23 +17,40 @@ import Modal from "../Modal/Modal";
 import { searchByQuery } from "../../../utils/search.util";
 
 function AdminDirectory() {
+  const dispatch = useDispatch();
   const administrators = useSelector(state => state.user.administrators);
+  const administratorSortingRule = useSelector(state => state.filter.administratorSortingRule);
+  const administratorFilters = useSelector(state => state.filter.administratorFilters);
+  const sortedAdministrators = useSelector(state => state.filter.administrators);
 
   const [isSearching, setIsSearching] = useState(false);
   const [searchResults, setSearchResults] = useState(undefined);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [editModalIsOpen, setEditModalIsOpen] = useState(false);
+  const [filterModalIsOpen, setFilterModalIsOpen] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState(undefined);
 
+  useEffect(() => {
+    dispatch(resetFilters());
+  }, [dispatch]);
+  
   const handleSearch = (query) => {
     setSearchResults(searchByQuery(query, administrators));
   }
   
-  const closeModal = () => {
-    setModalIsOpen(false);
+  const closeEditModal = () => {
+    setEditModalIsOpen(false);
+  }
+
+  const openFilterModal = () => {
+    setFilterModalIsOpen(true);
+  }
+
+  const closeFilterModal = () => {
+    setFilterModalIsOpen(false);
   }
 
   const handleEditUser = (administrator) => {
-    setModalIsOpen(true);
+    setEditModalIsOpen(true);
     setSelectedAdmin({
       id: administrator.id, 
       name: administrator.name,
@@ -60,22 +79,27 @@ function AdminDirectory() {
         initial="none"
         exitBeforeEnter={true}
         >
-        {modalIsOpen && 
-          <Modal handleClose={closeModal}>
-            <EditForm administrator={selectedAdmin} handleClose={closeModal} />
+        {editModalIsOpen && 
+          <Modal handleClose={closeEditModal}>
+            <EditForm administrator={selectedAdmin} handleClose={closeEditModal} />
+          </Modal>
+        }
+        {filterModalIsOpen && 
+          <Modal handleClose={closeFilterModal}>
+            <FilterList handleClose={closeFilterModal} />
           </Modal>
         }
       </AnimatePresence>
       <div className={classes.listHeader}>
         <h1 className={classes.title}>Administradores</h1>
         <div className={classes.actions}>
-          {/* <FilterButton className={classes.filterButton} /> */}
+          <FilterButton className={classes.filterButton} onClick={openFilterModal} />
           <SearchBar placeholder="Buscar por nombre del administrador" setIsSearching={setIsSearching} handleSearch={handleSearch} />
           <Button className={classes.createButton} label="Crear" onClick={handleCreate} />      
         </div>
       </div>
       <section className={classes.adminList}>
-        {Array.from(isSearching ? searchResults : administrators).map(administrator => (
+        {Array.from(isSearching ? searchResults : (administratorSortingRule || Object.keys(administratorFilters).length > 0 ? sortedAdministrators : administrators)).map(administrator => (
           <UserCard 
             key={administrator.id}  
             id={administrator.id}  

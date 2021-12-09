@@ -2,8 +2,7 @@ import { useEffect } from "react";
 import { createUseStyles } from "react-jss";
 import { Field, Form, Formik } from "formik";
 
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createUser, resetCreateUser } from "../../../redux/user/duck";
 
 import Button from "../../atoms/Button/Button";

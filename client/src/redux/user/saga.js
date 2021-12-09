@@ -1,8 +1,8 @@
 import { take, call, put, all } from "redux-saga/effects";
-import { encodePayload } from '../../utils/jwt.util';
+import { encodePayload } from "../../utils/jwt.util";
 import { requestCreateUser, requestEditUser, requestFetchUsers } from "./request";
 
-import { CREATE_USER_REQUESTED, EDIT_USER_REQUESTED, FETCH_USERS_REQUESTED, onCreateUserFailure, onCreateUserSuccess, onEditUserFailure, onEditUserSuccess, onFetchUsersFailure, onFetchUsersSuccess } from './duck';
+import { fetchUsers as fetchUsersAC, CREATE_USER_REQUESTED, EDIT_USER_REQUESTED, FETCH_USERS_REQUESTED, onCreateUserFailure, onCreateUserSuccess, onEditUserFailure, onEditUserSuccess, onFetchUsersFailure, onFetchUsersSuccess } from "./duck";
 
 function* fetchUsers() {
   while(true) {
@@ -27,7 +27,7 @@ function* fetchUsers() {
           email: usuario.eMailUsuario,
           password: usuario.Clave,
           temp: usuario.Temp,
-          status: usuario.Estado,
+          status: Boolean(usuario.Estado),
           company: usuario.Empresa,
           groupId: usuario.IDGrupo,
           rank: usuario.IDNivel,
@@ -90,7 +90,10 @@ function* editUser() {
       }
       let encodedPayload = encodePayload(payload, token);
       let { data: { statusCode, response: error } } = yield call(requestEditUser, encodedPayload);
-      if(statusCode === 200) yield put(onEditUserSuccess());
+      if(statusCode === 200) {
+        yield put(onEditUserSuccess());
+        yield put(fetchUsersAC(token, userPayload.distAuth));
+      }
       else yield put(onEditUserFailure(error));
     } catch (error) {
       yield put(onEditUserFailure(error));

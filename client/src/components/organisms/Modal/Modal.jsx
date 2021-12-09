@@ -43,8 +43,8 @@ export default Modal;
 
 const useStyles = createUseStyles({
   root: {
-    width: "clamp(50%, 400px, 80%)",
-    padding: "20px 40px",
+    width: "clamp(60%, 600px, 80%)",
+    padding: "30px 100px",
     borderRadius: 8,
     backgroundColor: "white",
   }

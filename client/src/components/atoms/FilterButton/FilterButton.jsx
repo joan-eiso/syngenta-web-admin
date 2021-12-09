@@ -1,12 +1,12 @@
-import { createUseStyles } from 'react-jss';
-import cn from 'classnames';
-import { BsFilter } from 'react-icons/bs';
+import { createUseStyles } from "react-jss";
+import cn from "classnames";
+import { BsFilter } from "react-icons/bs";
 
 
-function FilterButton({ className }) {
+function FilterButton({ className, onClick }) {
   const classes = useStyles();
   return (
-    <div className={cn(classes.root, className)}>
+    <div className={cn(classes.root, className)} onClick={onClick}>
       <BsFilter size={16} />
     </div>
   )
@@ -25,5 +25,6 @@ const useStyles = createUseStyles({
       radius: 8,
     },
     backgroundColor: "white",
+    cursor: "pointer"
   }
 });
