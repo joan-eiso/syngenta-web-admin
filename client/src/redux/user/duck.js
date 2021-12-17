@@ -21,6 +21,7 @@ const initialState = {
   createUserError: undefined,
   editUserSucceed: undefined,
   editUserError: undefined,
+  defaultPassword: "nkcerca.semillas",
 }
 
 export const fetchUsers = (token, distAuth) => ({

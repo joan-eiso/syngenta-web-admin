@@ -1,0 +1,139 @@
+import { useEffect } from "react";
+import { createUseStyles } from "react-jss";
+import { Field, Form, Formik } from "formik";
+
+import { useDispatch, useSelector } from "react-redux";
+import { createUser, resetCreateUser } from "../../../redux/user/duck";
+
+import Button from "../../atoms/Button/Button";
+import TextInput from "../../atoms/TextInput/TextInput";
+
+import { checkEmptyValueOnPayload, checkValidEmail } from "../../../utils/dataValidation.util";
+
+function CreateAdminForm() {
+  const dispatch = useDispatch();
+  const token = useSelector(state => state.auth.token);
+  const distAuth = useSelector(state => state.auth.distAuth);
+  const createUserSucceed = useSelector(state => state.user.createUserSucceed);
+  const createUserError = useSelector(state => state.user.createUserError);
+  const defaultPassword = useSelector(state => state.user.defaultPassword);
+
+  useEffect(() => {
+    if(createUserSucceed) {
+      alert("Administrador creado correctamente");
+      dispatch(resetCreateUser());
+    } else if(createUserError) {
+      alert("No se pudo crear el administrador");
+      dispatch(resetCreateUser());
+    }
+  }, [dispatch, createUserSucceed, createUserError]);
+
+  const handleCreate = (values, actions) => {
+    let { name, identification, company,  email } = values;
+    let payload = {
+      distAuth,
+      name,
+      identification,
+      email,
+      company,
+      password: defaultPassword,
+      temp: "0000",
+      status: 1, 
+      groupId: 0,
+      rank: 2,
+    }
+    if(checkEmptyValueOnPayload(values)) {
+      alert("Debes ingresar todos los valores");
+      return;
+    } 
+    else if(!checkValidEmail(email)) {
+      alert("Ingresa un email valido");
+      return;
+    }
+
+    dispatch(createUser(token, payload));
+
+    actions.resetForm({ values: {
+      name: "",
+      identification: "",
+      company: "",
+      email: "",
+    }});
+  }
+
+  const classes = useStyles();
+  return (
+    <Formik
+      initialValues={{
+        name: "",
+        identification: "",
+        company: "",
+        email: "",
+      }}
+      onSubmit={handleCreate}
+      >
+      <Form>
+        <div className={classes.formInputs}>
+          <div className={classes.formInputItem}>
+            <label htmlFor="name">Nombre</label>
+            <Field id="name" name="name" placeholder="Nombre completo" component={TextInput} />
+          </div>
+          <div className={classes.formInputItem}>
+            <label htmlFor="identification">Identificación</label>
+            <Field id="identification" name="identification" placeholder="Identificación" component={TextInput} />
+          </div>
+          <div className={classes.formInputItem}>
+            <label htmlFor="company">Empresa</label>
+            <Field id="company" name="company" placeholder="Empresa" component={TextInput} />
+          </div>
+          <div className={classes.formInputItem}>
+            <label htmlFor="email">Correo electrónico</label>
+            <Field id="email" name="email" placeholder="Correo electrónico" component={TextInput} />
+          </div>
+        </div>
+        <div className={classes.noteContainer}>
+          <p>*A cada usuario creado se le asignará la contraseña <span>{defaultPassword}</span> y deberá ser cambiada usando el sistema de recuperación de contraseña</p>
+        </div>
+        <Button type="submit" label="Crear" />
+      </Form>
+    </Formik>
+  )
+}
+
+export default CreateAdminForm;
+
+const useStyles = createUseStyles({
+  formInputs: {
+    display: "grid",
+    gap: 10,
+    marginBottom: 20,
+  },
+
+  formInputItem: {
+    display: "flex",
+    alignItems: "center",
+    
+    "& label": {
+      flex: 1,
+      marginRight: 20,
+    },
+    
+    "& input": {
+      flex: 2,
+    }
+  },
+
+  noteContainer: {
+    margin: "0px 0 20px",
+
+    "& > p": {
+      fontStyle: "italic",
+      fontSize: 12,
+      letterSpacing: 1
+    },
+
+    "& span": {
+      fontWeight: 700,
+    },
+  }
+})
